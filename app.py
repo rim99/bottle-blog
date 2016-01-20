@@ -31,9 +31,8 @@ def admin():
 
 @route('/')
 def index():
-    indexpge = open('/templates/base_bak.html', 'r', encoding='utf-8')
-    print(indexpge.read())
-    return indexpge.read() #'This is the index page of my blog site.'
+    indexpge = open('/www/templates/__base__.html', 'r', encoding='utf-8').read()
+    return indexpge #'This is the index page of my blog site.'
 
 
 
