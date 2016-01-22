@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="posts">
+    {% for post in post_list %}
+        <section class="post" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+            <a href="{{ post.url }}">
+            <header class="post-header">
+                <h2 class="post-title">{{ post.title }}</h2>
+            </header>
+            <div class="post-brief">
+                <!--<p>{{ post.content }}</p>-->
+            </div>
+            </a>
+            <p class="post-meta" style="font-family: Verdana, Geneva, sans-serif;">Posted on {{ post.post_date }} 
+                <a class="post-category post-category-js" href="http://localhost:8080/tag/{{ post.category }}">{{ post.category }}</a>
+            </p>
+        </section>
+    {% endfor %}
+</div>
+{% endblock %}
