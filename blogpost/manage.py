@@ -76,7 +76,7 @@ from misaka import Markdown, HtmlRenderer
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
-from models import BlogPost
+from blogpost.models import BlogPost
 import houdini
 
 MARKDOWN_EXTENSIONS = (
@@ -109,6 +109,7 @@ class HighlighterRenderer(HtmlRenderer):
 def saveFile(file, category=''):
     if category == '':
         print('未分类!')
+        return
     rndr = HighlighterRenderer()
     md = Markdown(rndr, MARKDOWN_EXTENSIONS)
     with open(file, 'r', encoding='utf-8') as f:

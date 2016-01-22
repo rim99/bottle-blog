@@ -5,9 +5,13 @@ __author__ = 'Rim99'
 
 from blogpost.manage import saveFile
 import sys
-
 print("file name：", sys.argv[0])
-print("tag: ", i, sys.argv[1])
+
+try:
+    print("tag: ", i, sys.argv[1])
+except:
+    print("Didn't find a tag...Abort")
+    
 
 file = sys.argv[1]
 category = sys.argv[2]

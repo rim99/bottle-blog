@@ -2,50 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c5fc072-cbc4-437a-91e1-58338259bb6a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/blogpost/manage.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/postfile.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/blog.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/grids-responsive-min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/pure-min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/aboutme.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/archives.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/base.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/base_bak.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/home.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/post.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/tag.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/README" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/css/addons/uikit.addons.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/css/addons/uikit.almost-flat.addons.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/css/addons/uikit.gradient.addons.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/css/awesome.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/css/uikit.almost-flat.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/css/uikit.gradient.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/css/uikit.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/fonts/FontAwesome.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/fonts/fontawesome-webfont.eot" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/fonts/fontawesome-webfont.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/fonts/fontawesome-webfont.woff" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/img/user.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/js/awesome.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/js/jquery.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/js/sha1.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/js/sticky.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/js/uikit.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/static/js/vue.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/templates/__base__.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/templates/blog.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/templates/blogs.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/templates/manage_blog_edit.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/templates/manage_blogs.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/templates/manage_comments.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/templates/manage_users.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/templates/register.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/templates/signin.html" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.py" afterPath="$PROJECT_DIR$/app.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blogpost/models.py" afterPath="$PROJECT_DIR$/blogpost/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blogpost/manage.py" afterPath="$PROJECT_DIR$/blogpost/manage.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/postfile.py" afterPath="$PROJECT_DIR$/postfile.py" />
     </list>
     <ignored path="bottle-blog.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -105,8 +63,8 @@
       <file leaf-file-name="postfile.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/postfile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5386534">
-              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.66334164">
+              <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
               <folding>
                 <element signature="e#70#106#0" expanded="true" />
               </folding>
@@ -527,8 +485,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/postfile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5386534">
-          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.66334164">
+          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
           <folding>
             <element signature="e#70#106#0" expanded="true" />
           </folding>
