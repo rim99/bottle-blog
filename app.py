@@ -3,19 +3,28 @@
 __author__ = 'Rim99'
 
 from bottle import route, run
-from jinja2 import Template
+from jinja2 import Template, Environment, PackageLoader, FileSystemLoader
+from blogpost.models import BlogPost
+
+
 import psycopg2
+import os
+
+path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '_templates')
+TEMPLATE_ENV = Environment(loader=FileSystemLoader(path))
 
 
 @route('/tag/<tag_id>')
 def catagory(tag_id):
-    index_page = Template('<h1>Hello, this tag id is "{{ tag_id }}"</h1>')
-    return index_page.render(tag_id=tag_id)
+    blog_posts = BlogPost.queryByTag(tag_id)
+    template = TEMPLATE_ENV.get_template('home.html')
+    return template.render(post_list=blog_posts)
 
 @route('/blogpost/<blog_id>')
 def blogpost(blog_id):
-    index_page = Template('<h1>Hello, this blog post id is "{{ blog_id }}"</h1>')
-    return index_page.render(blog_id=blog_id)
+    blog_post = BlogPost.query(blog_id)
+    template = TEMPLATE_ENV.get_template('post.html')
+    return template.render(post=blog_post)
 
 @route('/aboutme')
 def aboutme():
@@ -30,9 +39,12 @@ def admin():
     return '<h1>Hello, this is Admin Page!</h1>'
 
 @route('/')
-def index():
-    indexpge = open('/www/templates/__base__.html', 'r', encoding='utf-8').read()
-    return indexpge #'This is the index page of my blog site.'
+@route('/index/<page>')
+def index(page=1):
+    print('page : ',page)
+    blog_posts = BlogPost.getAll()
+    template = TEMPLATE_ENV.get_template('home.html')
+    return template.render(post_list=blog_posts)
 
 
 
@@ -63,7 +75,7 @@ DATABASE_NAME = 'BlogDatabase'
 HOST = 'localhost'
 USER_NAME = 'rim99'
 PASSWORD = 'passwd'
-DOMAIN_NAME = 'http://localhost:8080'
+DOMAIN_NAME = 'http://127.0.0.1:8080'
 
 try:
     dbconnection = psycopg2.connect("dbname=%s user=%s"
@@ -82,4 +94,4 @@ try:
 except:
     print('Fail to open database!')
 
-run(host='127.0.0.1', port=9000)
+run(host='127.0.0.1', port=8080)

@@ -7,7 +7,7 @@ This is my blog app based on [Bottle](http://bottlepy.org/)
 """CREATE TABLE blogpost (
             id serial PRIMARY KEY,
             title varchar,
-            catagory varchar,
+            category varchar,
             content text,
             blogID varchar,
             postdate varchar,
