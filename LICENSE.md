@@ -1,3 +1,3 @@
-#LICENSE
+# LICENSE
 
-**The source code of this web app is under MIT LICENSE, feel free to use.**
+The source code is under **MIT LICENSE**, absolutely free to use.

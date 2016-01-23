@@ -104,11 +104,9 @@ class HighlighterRenderer(HtmlRenderer):
         formatter = HtmlFormatter()
         return highlight(text, lexer, formatter)
 
-
-
 def saveFile(file, category=''):
     if category == '':
-        print('未分类!')
+        print('No tag! Abort.')
         return
     rndr = HighlighterRenderer()
     md = Markdown(rndr, MARKDOWN_EXTENSIONS)
@@ -118,18 +116,46 @@ def saveFile(file, category=''):
             title = line[1:]
             break
         content_html = (md(f.read()))
-        print('content:\n',content_html)
     blog_id = PurePosixPath(file).stem  # use the filename without the extension as the blog_id
     new_blog = BlogPost(title, category, content_html, blog_id)
+    old = BlogPost.query(blog_id)
+    if isinstance(old, BlogPost):
+        print("The same blog id already exists. \nOverwriting......")
+        old.delete()
+    else:
+        print("New blog. Posting...")
     new_blog.save()
-    # catagory = catagory
-    # print('blog_id :', blog_id)
-    # print('title :', title)
-    # print('---content---\n', content_html)
     return
 
+def list_all():
+    try:
+        blog_posts = BlogPost.getAll()
+        for blog in blog_posts:
+            print(blog_posts.index(blog))
+            blog.print()
+    except:
+        print('Error when list all files!')
 
+def list_by_tag(tag):
+    blog_posts = BlogPost.queryByTag(tag)
+    if len(blog_posts) == 0:
+        print('No file was found by tag: %s!' % tag)
+    for blog in blog_posts:
+        print(blog_posts.index(blog))
+        blog.print()
 
-
+def deleteFile(blog_id=''):
+    if blog_id == '':
+        blog_posts = BlogPost.getAll()
+        last_blog = blog_posts[-1]
+        blog_id = last_blog.blog_id
+    try:
+        BlogPost.delete_by_id(blog_id)
+    except:
+        print("Error!")
+    return
+# list_all()
+# deleteFile()
+# list_all()
 
 # print(HtmlFormatter().get_style_defs('.github'))

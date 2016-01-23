@@ -10,5 +10,5 @@ This is my blog app based on [Bottle](http://bottlepy.org/)
             category varchar,
             content text,
             blogID varchar,
-            postdate varchar,
+            postdate timestamp,
             url varchar);"""

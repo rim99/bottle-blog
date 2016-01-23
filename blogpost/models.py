@@ -3,22 +3,6 @@
 
 __author__ = 'Rim99'
 
-'''Django Example
-
-from django.db import models
-
-# Create your models here.
-class Article(models.Model):
-    title = models.CharField(max_length=100)
-    category = models.CharField(max_length=50, blank=True)
-    date_time = models.DateTimeField(auto_now_add=True)
-    content = models.TextField(blank=True, null=True)
-    def __unicode__(self):
-        return self.title
-    class Meta:
-        ordering = ['-date_time']
-'''
-
 import psycopg2
 import datetime
 
@@ -29,18 +13,17 @@ PASSWORD = 'passwd'
 DOMAIN_NAME = 'http://127.0.0.1:8080'
 
 class BlogPost(object):
-
     def __init__(self, title, category, content, blog_id):
         self.title = title
         self.category = category
         self.content = content
         self.blog_id = blog_id
-        self.post_date = datetime.date.today().strftime("%B %d, %Y")
+        self.post_date = datetime.datetime.today()
         self.url = ('%s/blogpost/%s' % (DOMAIN_NAME, blog_id))
 
     def print(self):
-        print('title:%s \ncategory:%s \ndatetime:%s \ncontent:%s \nURL:%s \nblogID:%s' %
-              (self.title, self.category, self.post_date, self.content, self.url, self.blog_id))
+        print('title:%s     category:%s     post date:%s     blogID:%s' %
+              (self.title, self.category, self.post_date, self.blog_id))
 
     def save(self):
         dbconnection = psycopg2.connect("dbname=%s user=%s"
@@ -91,7 +74,7 @@ class BlogPost(object):
         cursor = dbconnection.cursor()
         try:
             cursor.execute(
-                "SELECT * FROM blogpost WHERE category = '%s';" % tag
+                "SELECT * FROM blogpost WHERE category = '%s' ORDER BY postdate DESC;" % tag
             )
             blog_list = cursor.fetchall()
             blogposts = []
@@ -112,7 +95,7 @@ class BlogPost(object):
             cursor.close()
             dbconnection.close()
     @classmethod
-    def delete(cls, blog_id):
+    def delete_by_id(cls, blog_id):
         dbconnection = psycopg2.connect("dbname=%s user=%s"
                                     % (DATABASE_NAME, USER_NAME))
         cursor = dbconnection.cursor()
@@ -135,7 +118,7 @@ class BlogPost(object):
         cursor = dbconnection.cursor()
         try:
             cursor.execute(
-                "SELECT * FROM blogpost;"
+                "SELECT * FROM blogpost ORDER BY postdate DESC;"
             )
             blog_list = cursor.fetchall()
             blogposts = []
@@ -154,6 +137,10 @@ class BlogPost(object):
             dbconnection.commit()
             cursor.close()
             dbconnection.close()
+
+    def delete(self):
+        BlogPost.delete_by_id(self.blog_id)
+        return
 
 # 没必要存储URL
 # print('save & fectch all\n')

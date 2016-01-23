@@ -121,9 +121,10 @@ h3 {
 	background-color: #000000;
 	border: 2px solid #fff;
 	opacity: 0.7;
+    cursor: pointer;
 }
 
-.license:hover {
+.license a:hover {
 	border: 2px solid #daa520;
 	text-decoration: underline;
 }
@@ -181,24 +182,42 @@ h3 {
 	margin: 0 0.1em;
 	padding: 0.3em 1em;
 	color: #fff;
-	background: #999;
 	font-size: 80%;
+    background: #df2d4f;
 }
 
-.post-category-design {
-	background: #5aba59;
+.posts ul.pager {
+    margin-left: 0;
+    list-style: none;
 }
-
-.post-category-pure {
-	background: #4d85d1;
+li.prev, li.next {
+	padding-top: 0.7em;
+    display: block;
+    position: relative;
+    width: 12em;
+    height: 2.8em;
+    line-height: 1.2em;
+    text-align: center;
+    font-size: 0.9em;
+	border-radius: 0.8em;
+	background-color: #fff;
+	border: 2px solid #bbb;
+	opacity: 0.8;
+    cursor: pointer;
 }
-
-.post-category-yui {
-	background: #8156a7;
+li.prev {
+    margin-left: -10%;
+    float:left;
 }
-
-.post-category-js {
-	background: #df2d4f;
+li.next {
+    float: right;
+}
+.posts ul.pager li a {
+    color: #bbb;
+    text-decoration: none;
+}
+.posts ul.pager li a:hover {
+    border: #4d85d1;
 }
 
 .post-images {
@@ -344,8 +363,15 @@ h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:h
 	font-size: 0.9em;
 }
 
-.post-content  p, .post-content  blockquote, .post-content  ul, .post-content  ol, .post-content dl, .post-content  li, .post-content  table, .post-content  pre {
+.post-content  p, .post-content  blockquote, .post-content dl, .post-content  table, .post-content  pre {
 	margin: 0.85em 0;
+}
+
+.post-content  ol, .post-content  ul {
+     margin: 1.2em 0;
+ }
+.post-content  li {
+    margin: 0.5em 0;
 }
 
 .post-content  blockquote {
@@ -447,7 +473,12 @@ h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:h
 	line-height: 0;
 }
 
+
+
+
+
 .footer {
+    margin-top: 5em;
 	padding: 1em;
 	color: #bbb;
 	text-align: center;
@@ -488,12 +519,18 @@ computer
 		top: 0;
 		bottom: 0;
 	}
+    li.prev {
+        margin-left: 6%;
+    }
+    li.next {
+        margin-right: 0%;
+    }
 }
 
 /*
 tablet 
 */
-@media (min-width: 45em) and (max-width: 71.99em) {
+@media (min-width: 48em) and (max-width: 71.99em) {
 	.sidebar {
 		position: fixed;
 		top: 0;
@@ -504,6 +541,7 @@ tablet
 		margin-left: 5%;
 		width: 90%;
 	}
+    
 
 	h1.brand-title {
 		font-size: 170%;
@@ -518,6 +556,14 @@ tablet
 		padding-bottom: 0;
 	}
 
+    li.prev {
+        margin-left: -2.5%;
+    }
+    
+    li.next {
+        margin-right: 7%;
+    }
+    
 	div.licence {
 		margin: 15% 10% 15% 10%;
 	}
@@ -539,19 +585,19 @@ tablet
 }
 
 /* Nexus7 protrait */
-@media (min-width: 45em) and (max-width: 71.99em) and (max-height:40em) {
+@media (min-width: 48em) and (max-width: 71.99em) and (max-height:40em) {
 	.nav-list {
 		margin-top: 62%;
 	}
 }
 /* iPad landscape */
-@media (min-width: 45em) and (max-width: 71.99em) and (min-height:40.01em) and (max-height:52em) {
+@media (min-width: 48em) and (max-width: 71.99em) and (min-height:40.01em) and (max-height:52em) {
 	.nav-list {
 		margin-top: 120%;
 	}
 }
 /* iPad protrait */
-@media (min-width: 45em) and (max-width: 71.99em) and (min-height:52.01em) {
+@media (min-width: 48em) and (max-width: 71.99em) and (min-height:52.01em) {
 	.nav-list {
 		margin-top: 170%;
 	}
@@ -561,7 +607,7 @@ tablet
 /* 
 Cellphone 
 */
-@media (max-width: 45.99em) {
+@media (max-width: 47.99em) {
 	input.pure-input-3-3 {
 		margin-left: 2em;
 	}
@@ -571,6 +617,15 @@ Cellphone
 		margin-right: 2em;
 	}
 
+
+    li.prev {
+        margin-left: -4%;
+    }
+    
+    li.next {
+        margin-right: 4%;
+    }
+    
 	div.licence {
 		margin: 15% 10% 5% 10%;
 	}

@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Rim99'
 
-from bottle import route, run
-from jinja2 import Template, Environment, PackageLoader, FileSystemLoader
+from bottle import route, run, error
+from jinja2 import Environment, FileSystemLoader
 from blogpost.models import BlogPost
 
 
@@ -13,6 +13,18 @@ import os
 path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '_templates')
 TEMPLATE_ENV = Environment(loader=FileSystemLoader(path))
 
+POSTS_COUNT_PER_PAGE = 5
+
+class Page_Info(object):
+    def __init__(self, current_page=1, has_previous=False, has_next=False):
+        self.page = current_page
+        self.has_previous = has_previous
+        self.has_next = has_next
+
+@error(404)
+def error404(error):
+    template = TEMPLATE_ENV.get_template('error.html')
+    return template.render()
 
 @route('/tag/<tag_id>')
 def catagory(tag_id):
@@ -28,7 +40,8 @@ def blogpost(blog_id):
 
 @route('/aboutme')
 def aboutme():
-    return '<h1>About me page is under construction.</h1>'
+    template = TEMPLATE_ENV.get_template('aboutme.html')
+    return template.render()
 
 @route('/archives')
 def archives():
@@ -39,12 +52,18 @@ def admin():
     return '<h1>Hello, this is Admin Page!</h1>'
 
 @route('/')
-@route('/index/<page>')
-def index(page=1):
-    print('page : ',page)
-    blog_posts = BlogPost.getAll()
+@route('/page=<page>')
+def index(page='1'):
+    page_num = int(page)
+    all_blog_posts = BlogPost.getAll()
+    blog_posts = all_blog_posts[(page_num-1)*POSTS_COUNT_PER_PAGE: page_num*POSTS_COUNT_PER_PAGE]
+    current_page_info = Page_Info(page_num, False, False)
+    if page_num > 1:
+        current_page_info.has_previous = True
+    if page_num*POSTS_COUNT_PER_PAGE < len(all_blog_posts):
+        current_page_info.has_next = True
     template = TEMPLATE_ENV.get_template('home.html')
-    return template.render(post_list=blog_posts)
+    return template.render(post_list=blog_posts, page_info=current_page_info)
 
 
 

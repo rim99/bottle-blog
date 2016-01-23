@@ -11,10 +11,26 @@
                 <!--<p>{{ post.content }}</p>-->
             </div>
             </a>
-            <p class="post-meta" style="font-family: Verdana, Geneva, sans-serif;">Posted on {{ post.post_date }} 
-                <a class="post-category post-category-js" href="http://localhost:8080/tag/{{ post.category }}">{{ post.category }}</a>
+            <p class="post-meta" style="font-family: Verdana, Geneva, sans-serif;">Posted on {{ post.post_date.strftime("%B %d, %Y") }} <!--    -->
+                <a class="post-category" href="http://localhost:8080/tag/{{ post.category }}">{{ post.category }}</a>
             </p>
         </section>
     {% endfor %}
+    
+    {% if page_info.has_previous or page_info.has_next %}
+      <div>
+      <ul class="pager">
+      {% if page_info.has_previous %}
+        <li class="prev" style="text-decoration: none;"><a href="page={{ page_info.page -1 }}">← Newer Posts</a></li>
+      {% endif %}
+
+      {% if page_info.has_next %}
+        <li class="next" style="text-decoration: none;"><a href="page={{ page_info.page +1 }}">Older Posts →</a></li>
+      {% endif %}
+      </ul>
+      </div>
+    {% endif %}
+    
+    
 </div>
 {% endblock %}
