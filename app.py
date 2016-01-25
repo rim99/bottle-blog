@@ -80,7 +80,7 @@ class StripPathMiddleware(object):
 
 if __name__ == '__main__':
     run(app=StripPathMiddleware(app),
-        server='python_server',
+        # server='uwsgi', #'python_server',
         host='0.0.0.0',
         port=8080)
 
