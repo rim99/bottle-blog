@@ -15,44 +15,46 @@ TEMPLATE_ENV = Environment(loader=FileSystemLoader(path))
 
 POSTS_COUNT_PER_PAGE = 5
 
+app = application = bottle.Bottle()
+
 class Page_Info(object):
     def __init__(self, current_page=1, has_previous=False, has_next=False):
         self.page = current_page
         self.has_previous = has_previous
         self.has_next = has_next
 
-@error(404)
+@app.error(404)
 def error404(error):
     template = TEMPLATE_ENV.get_template('error.html')
     return template.render()
 
-@route('/tag/<tag_id>')
+@app.route('/tag/<tag_id>')
 def catagory(tag_id):
     blog_posts = BlogPost.queryByTag(tag_id)
     template = TEMPLATE_ENV.get_template('home.html')
     return template.render(post_list=blog_posts)
 
-@route('/blogpost/<blog_id>')
+@app.route('/blogpost/<blog_id>')
 def blogpost(blog_id):
     blog_post = BlogPost.query(blog_id)
     template = TEMPLATE_ENV.get_template('post.html')
     return template.render(post=blog_post)
 
-@route('/aboutme')
+@app.route('/aboutme')
 def aboutme():
     template = TEMPLATE_ENV.get_template('aboutme.html')
     return template.render()
 
-@route('/archives')
+@app.route('/archives')
 def archives():
     return 'The archives page is under consturction.'
 
-@route('/admin')
+@app.route('/admin')
 def admin():
     return '<h1>Hello, this is Admin Page!</h1>'
 
-@route('/')
-@route('/page=<page>')
+@app.route('/')
+@app.route('/page=<page>')
 def index(page='1'):
     page_num = int(page)
     all_blog_posts = BlogPost.getAll()
