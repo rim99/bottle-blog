@@ -65,6 +65,22 @@ def index(page='1'):
     template = TEMPLATE_ENV.get_template('home.html')
     return template.render(post_list=blog_posts, page_info=current_page_info)
 
+# For uWSGI Service
+class StripPathMiddleware(object):
+    '''
+    Get that slash out of the request
+    '''
+    def __init__(self, a):
+        self.a = a
+    def __call__(self, e, h):
+        e['PATH_INFO'] = e['PATH_INFO'].rstrip('/')
+        return self.a(e, h)
+
+if __name__ == '__main__':
+    bottle.run(app=StripPathMiddleware(app),
+        server='python_server',
+        host='0.0.0.0',
+        port=8080)
 
 
 
@@ -88,29 +104,27 @@ def index(page='1'):
 
 
 
+# DATABASE_NAME = 'BlogDatabase'
+# HOST = 'localhost'
+# USER_NAME = 'rim99'
+# PASSWORD = 'passwd'
+# DOMAIN_NAME = 'http://127.0.0.1:8080'
 
+# try:
+#     dbconnection = psycopg2.connect("dbname=%s user=%s"
+#                                     % (DATABASE_NAME, USER_NAME))
+#     cursor = dbconnection.cursor()
+#     try:
+#         cursor.execute(
+#             "SELECT * FROM blogpost;"
+#         )
+#     except:
+#         print('Fail to get the table')
+#     dbconnection.commit()
+#     cursor.close()
+#     dbconnection.close()
+#     print('Database test completed')
+# except:
+#     print('Fail to open database!')
 
-DATABASE_NAME = 'BlogDatabase'
-HOST = 'localhost'
-USER_NAME = 'rim99'
-PASSWORD = 'passwd'
-DOMAIN_NAME = 'http://127.0.0.1:8080'
-
-try:
-    dbconnection = psycopg2.connect("dbname=%s user=%s"
-                                    % (DATABASE_NAME, USER_NAME))
-    cursor = dbconnection.cursor()
-    try:
-        cursor.execute(
-            "SELECT * FROM blogpost;"
-        )
-    except:
-        print('Fail to get the table')
-    dbconnection.commit()
-    cursor.close()
-    dbconnection.close()
-    print('Database test completed')
-except:
-    print('Fail to open database!')
-
-run(host='127.0.0.1', port=8080)
+# run(host='127.0.0.1', port=8080)
