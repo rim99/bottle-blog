@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Rim99'
 
-from bottle import route, run, error
+from bottle import Bottle, route, run, error
 from jinja2 import Environment, FileSystemLoader
 from blogpost.models import BlogPost
 
@@ -15,7 +15,7 @@ TEMPLATE_ENV = Environment(loader=FileSystemLoader(path))
 
 POSTS_COUNT_PER_PAGE = 5
 
-app = application = bottle.Bottle()
+app = application = Bottle()
 
 class Page_Info(object):
     def __init__(self, current_page=1, has_previous=False, has_next=False):
