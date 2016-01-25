@@ -7,10 +7,10 @@ import psycopg2
 import datetime
 
 DATABASE_NAME = 'BlogDatabase'
-HOST = 'localhost'
-USER_NAME = 'rim99'
-PASSWORD = 'passwd'
-DOMAIN_NAME = 'http://127.0.0.1:8080'
+HOST = tcp://10.10.188.209:52112
+USER_NAME = 'postgres'
+PASSWORD = 'O6XwugJbw5wSK'
+DOMAIN_NAME = 'http://rim99-my-bottle-blog.daoapp.io/'
 
 class BlogPost(object):
     def __init__(self, title, category, content, blog_id):
