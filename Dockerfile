@@ -22,7 +22,8 @@ FROM ubuntu:14.04
 MAINTAINER Dockerfiles
 
 # RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-RUN perl -p -i.orig -e 's/archive.ubuntu.com/mirrors.aliyun.com\/ubuntu/' /etc/apt/sources.list
+# RUN perl -p -i.orig -e 's/archive.ubuntu.com/mirrors.aliyun.com\/ubuntu/' /etc/apt/sources.list
+RUN apt-get update --fix-missing 
 RUN apt-get update
 # RUN apt-get install -y build-essential git
 # RUN apt-get install -y python python-dev python-setuptools
@@ -30,14 +31,12 @@ RUN apt-get update
 # RUN easy_install pip
 RUN apt-get -y upgrade
 RUN apt-get install -y python3 python3-pip uwsgi \
-                        uwsgi-plugin-python \
+                        uwsgi-plugin-python3 wget \
                         build-essential libssl-dev \
-                        libffi-dev python3-dev \
-                        supervisor python3-setuptools
-RUN easy_install pip 
-
-# install uwsgi now because it takes a little while
-RUN pip install uwsgi
+                        libffi-dev python3-dev software-properties-common \
+                        supervisor python3-setuptools python2.7-dev
+RUN wget https://bootstrap.pypa.io/get-pip.py
+RUN python get-pip.py
 
 # install nginx
 RUN add-apt-repository -y ppa:nginx/stable
@@ -47,6 +46,9 @@ RUN apt-get install -y python-software-properties nginx # add 'nginx'
 # install PostgreSQL
 # RUN apt-get install -y sqlite3
 RUN apt-get install -y postgresql python-psycopg2 libpq-dev
+
+# install uwsgi now because it takes a little while
+RUN pip install uwsgi
 
 # install our code
 add . /home/docker/bottle-blog/
