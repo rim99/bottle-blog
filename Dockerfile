@@ -21,14 +21,8 @@ FROM ubuntu:14.04
 
 MAINTAINER Dockerfiles
 
-# RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-# RUN perl -p -i.orig -e 's/archive.ubuntu.com/mirrors.aliyun.com\/ubuntu/' /etc/apt/sources.list
 RUN apt-get update --fix-missing 
 RUN apt-get update
-# RUN apt-get install -y build-essential git
-# RUN apt-get install -y python python-dev python-setuptools
-# RUN apt-get install -y nginx 
-# RUN easy_install pip
 RUN apt-get -y upgrade
 RUN apt-get install -y python3 python3-pip uwsgi \
                         uwsgi-plugin-python3 wget \
@@ -44,7 +38,6 @@ RUN apt-get update -y
 RUN apt-get install -y python-software-properties nginx # add 'nginx'
 
 # install PostgreSQL
-# RUN apt-get install -y sqlite3
 RUN apt-get install -y postgresql python-psycopg2 libpq-dev
 
 # install uwsgi now because it takes a little while
@@ -67,10 +60,6 @@ RUN ln -s /etc/uwsgi/apps-available/uwsgi.ini /etc/uwsgi/apps-enabled/uwsgi.ini 
 # RUN pip install
 # RUN pip install -r /home/docker/bottle-blog/app/requirements.txt
 RUN pip3 install bottle psycopg2 jinja2 misaka Pygments houdini.py
-
-# install django, normally you would remove this step because your project would already
-# be installed in the bottle-blog/app/ directory
-# RUN django-admin.py startproject website /home/docker/bottle-blog/app/ 
 
 expose 80
 # cmd ["supervisord", "-n"]
