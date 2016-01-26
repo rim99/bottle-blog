@@ -21,6 +21,13 @@ RUN apt-get install -y postgresql python-psycopg2 libpq-dev
 # add new user 
 RUN useradd 'www-user' 
 RUN echo 'www-passwd'|passwd
+RUN echo 'www-passwd'|passwd
+RUN echo '123' # full name
+RUN echo '123' # room no. 
+RUN echo '123' # work phone.
+RUN echo '123' # home phone.
+RUN echo '123' # other
+RUN echo 'y' # Confirmation
 
 # configure database setting 
 
