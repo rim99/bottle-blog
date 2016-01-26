@@ -77,62 +77,9 @@ def index(page='1'):
 
 container = tornado.wsgi.WSGIContainer(app)
 http_server = tornado.httpserver.HTTPServer(container)
-http_server.bind(8080, address='127.0.0.1')
-http_server.bind(8081, address='127.0.0.1')
+http_server.bind(80, address='0.0.0.0')
+# http_server.bind(8081, address='127.0.0.1')
 http_server.start(2)
 tornado.ioloop.IOLoop.current().start()
 
 
-
-
-# if __name__ == "__main__":
-#     # Interactive mode
-#     run(host='localhost', port=8080)
-# else:
-#     # Mod WSGI launch
-#     os.chdir(os.path.dirname(__file__))
-#     application = default_app()
-
-
-# # For uWSGI Service
-# class StripPathMiddleware(object):
-#     '''
-#     Get that slash out of the request
-#     '''
-#     def __init__(self, a):
-#         self.a = a
-#     def __call__(self, e, h):
-#         e['PATH_INFO'] = e['PATH_INFO'].rstrip('/')
-#         return self.a(e, h)
-#
-# if __name__ == '__main__':
-#     run(app=StripPathMiddleware(app),
-#         # server='uwsgi', #'python_server',
-#         host='127.0.0.1',
-#         port=8080)
-
-
-# DATABASE_NAME = 'BlogDatabase'
-# HOST = 'localhost'
-# USER_NAME = 'rim99'
-# PASSWORD = 'passwd'
-# DOMAIN_NAME = 'http://127.0.0.1:8080'
-
-# try:
-#     dbconnection = psycopg2.connect("dbname=%s user=%s"
-#                                     % (DATABASE_NAME, USER_NAME))
-#     cursor = dbconnection.cursor()
-#     try:
-#         cursor.execute(
-#             "SELECT * FROM blogpost;"
-#         )
-#     except:
-#         print('Fail to get the table')
-#     dbconnection.commit()
-#     cursor.close()
-#     dbconnection.close()
-#     print('Database test completed')
-# except:
-#     print('Fail to open database!')
-
-# run(host='127.0.0.1', port=8080)
