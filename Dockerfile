@@ -24,6 +24,10 @@ RUN useradd -p www-passwd www-user
 # configure database setting 
 
 RUN echo "export PGHOST=localhost" >> /.bash_profile
+
+RUN reboot now
+
+
 RUN sudo -u postgres createdb -O www-user BlogDatabase 
 RUN psql -U www-user -d BlogDatabase -c       \ 
 "CREATE TABLE blogpost (      \
