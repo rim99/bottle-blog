@@ -11,8 +11,11 @@ python get-pip.py
 
 apt-get install -y postgresql python-psycopg2 libpq-dev
 
-mkdir /home/www/
-cd /home/www
+# add new user 
+# configure database setting 
+
+mkdir /home/www-user/
+cd /home/www-user
 git clone https://github.com/rim99/bottle-blog.git
 
 ln -s /home/docker/bottle-blog/lighttpd.conf /etc/lighttpd/lighttpd.conf
