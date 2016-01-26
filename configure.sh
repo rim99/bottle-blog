@@ -1,10 +1,10 @@
 apt-get update
 apt-get -y upgrade
-apt-get install -y python3 python3-pip uwsgi \
+apt-get install -y python3 python3-pip  build-essential libssl-dev \
                         uwsgi-plugin-python3 wget python-software-properties \ 
-                        build-essential libssl-dev lighttpd lighttpd-doc \
                         libffi-dev python3-dev software-properties-common \
                         supervisor python3-setuptools python2.7-dev
+                        # lighttpd lighttpd-doc \
 
 wget https://bootstrap.pypa.io/get-pip.py
 python get-pip.py
@@ -31,7 +31,7 @@ url       varchar);"
 cd /home/www-user
 git clone https://github.com/rim99/bottle-blog.git
 
-ln -s /home/www-user/bottle-blog/lighttpd.conf /etc/lighttpd/lighttpd.conf
+# ln -s /home/www-user/bottle-blog/lighttpd.conf /etc/lighttpd/lighttpd.conf
 
 pip3 install bottle tornado psycopg2 jinja2 misaka Pygments houdini.py
 
