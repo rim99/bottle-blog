@@ -22,8 +22,7 @@ RUN apt-get install -y postgresql python-psycopg2 libpq-dev
 RUN useradd -p www-passwd www-user 
 
 # configure database setting 
-
-RUN createdb BlogDatabase
+RUN sudo -u postgres createdb -O www-user BlogDatabase 
 RUN psql -U www-user -d BlogDatabase -c       \ 
 "CREATE TABLE blogpost (      \
 id       serial PRIMARY KEY,  \
