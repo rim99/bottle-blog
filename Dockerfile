@@ -23,8 +23,7 @@ RUN useradd -p www-passwd www-user
 
 # configure database setting 
 
-RUN mkdir /var/pgsql_socket/ 
-RUN ln -s /var/run/postgresql/.s.PGSQL.5432 /var/pgsql_socket/
+RUN echo "export PGHOST=localhost" >> /.bash_profile
 RUN sudo -u postgres createdb -O www-user BlogDatabase 
 RUN psql -U www-user -d BlogDatabase -c       \ 
 "CREATE TABLE blogpost (      \
