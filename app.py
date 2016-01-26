@@ -2,15 +2,18 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Rim99'
 
-from bottle import Bottle, route, run, error
+from bottle import Bottle, default_app, route, run, error, static_file
 from jinja2 import Environment, FileSystemLoader
 from blogpost.models import BlogPost
 
 
-import psycopg2
+import tornado.wsgi
+import tornado.ioloop
+import tornado.httpserver
 import os
 
 path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '_templates')
+static_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '_static')
 TEMPLATE_ENV = Environment(loader=FileSystemLoader(path))
 
 POSTS_COUNT_PER_PAGE = 5
@@ -27,6 +30,10 @@ class Page_Info(object):
 def error404(error):
     template = TEMPLATE_ENV.get_template('error.html')
     return template.render()
+
+@app.route('/_static/<filename>')
+def server_static(filename):
+    return static_file(filename, root=static_path)
 
 @app.route('/tag/<tag_id>')
 def catagory(tag_id):
@@ -67,43 +74,42 @@ def index(page='1'):
     template = TEMPLATE_ENV.get_template('home.html')
     return template.render(post_list=blog_posts, page_info=current_page_info)
 
-# For uWSGI Service
-class StripPathMiddleware(object):
-    '''
-    Get that slash out of the request
-    '''
-    def __init__(self, a):
-        self.a = a
-    def __call__(self, e, h):
-        e['PATH_INFO'] = e['PATH_INFO'].rstrip('/')
-        return self.a(e, h)
 
-if __name__ == '__main__':
-    run(app=StripPathMiddleware(app),
-        # server='uwsgi', #'python_server',
-        host='0.0.0.0',
-        port=8080)
+container = tornado.wsgi.WSGIContainer(app)
+http_server = tornado.httpserver.HTTPServer(container)
+http_server.bind(8080, address='127.0.0.1')
+http_server.bind(8081, address='127.0.0.1')
+http_server.start(2)
+tornado.ioloop.IOLoop.current().start()
 
 
 
 
+# if __name__ == "__main__":
+#     # Interactive mode
+#     run(host='localhost', port=8080)
+# else:
+#     # Mod WSGI launch
+#     os.chdir(os.path.dirname(__file__))
+#     application = default_app()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# # For uWSGI Service
+# class StripPathMiddleware(object):
+#     '''
+#     Get that slash out of the request
+#     '''
+#     def __init__(self, a):
+#         self.a = a
+#     def __call__(self, e, h):
+#         e['PATH_INFO'] = e['PATH_INFO'].rstrip('/')
+#         return self.a(e, h)
+#
+# if __name__ == '__main__':
+#     run(app=StripPathMiddleware(app),
+#         # server='uwsgi', #'python_server',
+#         host='127.0.0.1',
+#         port=8080)
 
 
 # DATABASE_NAME = 'BlogDatabase'
