@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Rim99'
 
-from bottle import Bottle, default_app, route, run, error
+from bottle import Bottle, default_app, route, run, error, static_file
 from jinja2 import Environment, FileSystemLoader
 from blogpost.models import BlogPost
 
@@ -13,6 +13,7 @@ import tornado.httpserver
 import os
 
 path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '_templates')
+static_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '_static')
 TEMPLATE_ENV = Environment(loader=FileSystemLoader(path))
 
 POSTS_COUNT_PER_PAGE = 5
@@ -29,6 +30,10 @@ class Page_Info(object):
 def error404(error):
     template = TEMPLATE_ENV.get_template('error.html')
     return template.render()
+
+@app.route('/_static/<filename>')
+def server_static(filename):
+    return static_file(filename, root=static_path)
 
 @app.route('/tag/<tag_id>')
 def catagory(tag_id):
@@ -74,8 +79,7 @@ container = tornado.wsgi.WSGIContainer(app)
 http_server = tornado.httpserver.HTTPServer(container)
 http_server.bind(8080, address='127.0.0.1')
 http_server.bind(8081, address='127.0.0.1')
-http_server.bind(8082, address='127.0.0.1')
-http_server.start()
+http_server.start(2)
 tornado.ioloop.IOLoop.current().start()
 
 

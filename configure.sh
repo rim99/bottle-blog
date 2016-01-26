@@ -12,13 +12,26 @@ python get-pip.py
 apt-get install -y postgresql python-psycopg2 libpq-dev
 
 # add new user 
+useradd 'www-user' 
+echo 'www-passwd'|passwd
+
 # configure database setting 
 
-mkdir /home/www-user/
+createdb BlogDatabase
+psql -U www-user -d BlogDatabase -c       \ 
+"CREATE TABLE blogpost (      \
+id       serial PRIMARY KEY,  \
+title     varchar,            \
+category  varchar,            \
+content   text,               \
+blogID    varchar,            \
+postdate  timestamp,          \
+url       varchar);"           
+
 cd /home/www-user
 git clone https://github.com/rim99/bottle-blog.git
 
-ln -s /home/docker/bottle-blog/lighttpd.conf /etc/lighttpd/lighttpd.conf
+ln -s /home/www-user/bottle-blog/lighttpd.conf /etc/lighttpd/lighttpd.conf
 
 pip3 install bottle tornado psycopg2 jinja2 misaka Pygments houdini.py
 
