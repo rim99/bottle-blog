@@ -1,21 +1,22 @@
-# THIS README HASN'T FINISHED YET.
 # About
 
 This is a personal blog app based on [Bottle](http://bottlepy.org/). Visit [my blog]() to see what it's like.
 
 ## How to use
 
+### Deployment
 
+The blog uses [Tornado](http://www.tornadoweb.org/en/stable/) as its HTTP server, which supports Python3.x. The `_config/Dockerfile` and `_config/lighttpd.conf` are unavailable right now. 
 
+Use `_config/configure.sh` to complete the deployment. 
 
+### Database Deatil
 
-### Database Setting
-
-The project uses [PostgreSQL]() as its database. So, install it first. Then you have to manually create a database and a data table. The structure of the data table is this:
+The project uses [PostgreSQL](www.postgresql.org) as its database. The following table shows the structure of the data table:
  
 item     | type
 :-:      | :-:
-id       |serial PRIMARY KEY
+id       | serial PRIMARY KEY
 title    | varchar
 category | varchar
 content  | text
