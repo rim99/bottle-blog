@@ -1,12 +1,12 @@
 # About
 
-This is a personal blog app based on [Bottle](http://bottlepy.org/). Visit [my blog]() to see what it's like.
+This is a personal blog app based on [Bottle](http://bottlepy.org/), and uses [Tornado](http://www.tornadoweb.org/en/stable/) as its HTTP server, which all supports Python3.x. Visit [my blog]() to see what it's like.
 
 ## How to use
 
 ### Deployment
 
-The blog uses [Tornado](http://www.tornadoweb.org/en/stable/) as its HTTP server, which supports Python3.x. The `_config/Dockerfile` and `_config/lighttpd.conf` are unavailable right now. 
+The `_config/Dockerfile` and `_config/lighttpd.conf` are unavailable right now. 
 
 Use `_config/configure.sh` to complete the deployment. 
 
