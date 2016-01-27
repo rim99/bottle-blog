@@ -1,6 +1,6 @@
 # About
 
-This is a personal blog app based on [Bottle](http://bottlepy.org/), and uses [Tornado](http://www.tornadoweb.org/en/stable/) as its HTTP server, which all supports Python3.x. Visit [my blog]() to see what it's like.
+This is a personal blog app based on [Bottle](http://bottlepy.org/), and uses [Tornado](http://www.tornadoweb.org/en/stable/) as its HTTP server, which all supports Python3.x. Visit [my blog](http://www.rim99.com) to see what it's like.
 
 ## How to use
 
