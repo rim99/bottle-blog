@@ -8,9 +8,9 @@ import datetime
 
 DATABASE_NAME = 'BlogDatabase'
 HOST = 'localhost'
-USER_NAME = 'www-user'
-PASSWORD = 'www-passwd'
-DOMAIN_NAME = 'http://45.78.17.80/'
+USER_NAME = 'root'
+PASSWORD = 'passwd'
+DOMAIN_NAME = 'http://www.rim99.com'
 
 
 class BlogPost(object):

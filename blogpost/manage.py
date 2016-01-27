@@ -154,8 +154,3 @@ def deleteFile(blog_id=''):
     except:
         print("Error!")
     return
-# list_all()
-# deleteFile()
-# list_all()
-
-# print(HtmlFormatter().get_style_defs('.github'))
