@@ -23,6 +23,8 @@ RUN useradd -p www-passwd www-user
 
 # configure database setting 
 RUN echo "export PGHOST=localhost" >> /.bash_profile 
+RUN mkdir /var/pgsql_socket/ 
+RUN ln -s /var/run/postgresql/.s.PGSQL.5432 /var/pgsql_socket/
 RUN sudo chmod o+rwx /var/run/postgresql/.s.PGSQL.5432
 RUN sudo chown "webUser"  /var/run/postgresql/.s.PGSQL.5432
 
