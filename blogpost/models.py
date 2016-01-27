@@ -10,7 +10,7 @@ DATABASE_NAME = 'BlogDatabase'
 HOST = 'localhost'
 USER_NAME = 'www-user'
 PASSWORD = 'www-passwd'
-DOMAIN_NAME = 'http://localhost/'
+DOMAIN_NAME = 'http://45.78.17.80/'
 
 
 class BlogPost(object):
@@ -143,17 +143,3 @@ class BlogPost(object):
         BlogPost.delete_by_id(self.blog_id)
         return
 
-# 没必要存储URL
-# print('save & fectch all\n')
-# m = BlogPost('第七篇测试', 'Python', '这是一片简单的测试文章!\n由于bottle.py的简单，可以任意的使用。但是对工程目录进行良好的规划，可以为后续的维护带来便利。由于之前对Django比较熟悉，参考Django工程目录设计了 bottle.py应用的目录结构：', 'TEST3')
-# m.save()
-# s = BlogPost.getAll()
-# print(s,'\nlen : ',len(s))
-# print('querying...\n')
-# a = BlogPost.query('TEST')
-# a.print()
-# print('avoid delete...')
-# for i in range(11):
-# BlogPost.delete('插入排序与希尔排序')
-# c = BlogPost.query('ss')
-# print(c.url)
