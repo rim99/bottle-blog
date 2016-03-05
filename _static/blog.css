@@ -363,6 +363,13 @@ h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:h
 	font-size: 0.9em;
 }
 
+.post-content strong {
+    color: #df2d4f;
+}
+
+.post-content em {
+    color: #20B2AA;
+}
 .post-content  p, .post-content  blockquote, .post-content dl, .post-content  table, .post-content  pre {
 	margin: 0.85em 0;
 }
