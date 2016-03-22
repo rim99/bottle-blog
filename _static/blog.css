@@ -202,6 +202,7 @@ li.prev, li.next {
 	border-radius: 0.8em;
 	background-color: #fff;
 	border: 2px solid #bbb;
+    color:#bbb;
 	opacity: 0.8;
     cursor: pointer;
 }
