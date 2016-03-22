@@ -21,11 +21,14 @@
       <div>
       <ul class="pager">
       {% if page_info.has_previous %}
-        <li class="prev" style="text-decoration: none;"><a href="page={{ page_info.page -1 }}">← Previous Posts</a></li>
+        <a href="page={{ page_info.page -1 }}"><li class="prev" style="text-decoration: none;">← Previous Posts</li></a>
       {% endif %}
 
       {% if page_info.has_next %}
+        <a href="page={{ page_info.page +1 }}"><li class="next" style="text-decoration: none;">Older Posts →</li></a>
+        <!--
         <li class="next" style="text-decoration: none;"><a href="page={{ page_info.page +1 }}">Older Posts →</a></li>
+        -->
       {% endif %}
       </ul>
       </div>
