@@ -130,11 +130,13 @@ def save_post(file, category=''):
 def list_all():
     try:
         blog_posts = BlogPost.get_all()
+        print('Total: ', len(blog_posts))
         for blog in blog_posts:
             print(blog_posts.index(blog))
             blog.print()
     except:
-        print('Error when list all files!')
+        print('Error when list all files!\n')
+        raise
 
 def list_by_tag(tag):
     blog_posts = BlogPost.query_by_tag(tag)
@@ -147,9 +149,10 @@ def list_by_tag(tag):
 def delete_post(blog_id=''):
     if blog_id == '':
         blog_posts = BlogPost.get_all()
-        last_blog = blog_posts[-1]
+        last_blog = blog_posts[0]
         blog_id = last_blog.blog_id
     try:
+        print('id: %s' % blog_id)
         BlogPost.delete_by_id(blog_id)
     except:
         print("Error when deleting!")

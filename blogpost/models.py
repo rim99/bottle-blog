@@ -22,12 +22,32 @@ class BlogPost(object):
         self.url = ('%s/blogpost/%s' % (DOMAIN_NAME, blog_id))
 
     @classmethod
-    def execute_sql_cmd(cls, keyword, argument):
+    def execute_sql_cmd(cls, keyword, attachment):
         '''Str, Str or Blogpost -> Blogpost or [Blogpost, Blogpost, ...] or JUST EXECUTE THE COMMAND
         keyword -- Str, an identification of the command
         argument -- Str, varys from different keywords
                 or Blogpost that will be saved
         '''
+        def sql_cmd(selector_id, attachment_inner):
+            '''Str, Str or Blogpost -> Str
+            Return SQL command according to the key_word.
+            '''
+            if selector_id == "query_by_id":
+                return "SELECT * FROM blogpost WHERE blogID = '%s';" % attachment_inner
+            elif selector_id == "query_by_tag":
+                return "SELECT * FROM blogpost WHERE category = '%s' ORDER BY postdate DESC;" % attachment_inner
+            elif selector_id == "get_all":
+                return "SELECT * FROM blogpost ORDER BY postdate DESC;"
+            elif selector_id == "delete_by_id":
+                return "DELETE FROM blogpost WHERE blogID = '%s';" % attachment_inner
+            elif selector_id == "save" and isinstance(attachment_inner, BlogPost):
+                return "INSERT INTO blogpost (title, category, content, blogID, postdate, url) \
+                VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % \
+                (attachment_inner.title, attachment_inner.category, attachment_inner.content,
+                 attachment_inner.blog_id, attachment_inner.post_date, attachment_inner.url)
+            else:
+                print("No SQL command found by keyword: '%s'" % keyword)
+                return
         def blogpost_from_DB(result):
             '''SQL database query result -> Blogpost
             This function transform the result of SQL database query command to an instance of Blogpost Class.
@@ -36,26 +56,13 @@ class BlogPost(object):
             blog_post.post_date = result[5]
             blog_post.url = result[6]
             return blog_post
-        sql_cmd = ''
-        if keyword == "query_by_id":
-            sql_cmd = "SELECT * FROM blogpost WHERE blogID = '%s';" % argument
-        elif keyword == "query_by_tag":
-            sql_cmd = "SELECT * FROM blogpost WHERE category = '%s' ORDER BY postdate DESC;" % argument
-        elif keyword == "get_all":
-            sql_cmd = "SELECT * FROM blogpost ORDER BY postdate DESC;"
-        elif keyword == "delete_by_id":
-            sql_cmd = "DELETE FROM blogpost WHERE blogID = '%s';" % argument
-        elif keyword == "save" and isinstance(argument, BlogPost):
-            sql_cmd = "INSERT INTO blogpost (title, category, content, blogID, postdate, url) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" %\
-            (argument.title, argument.category, argument.content, argument.blog_id, argument.post_date, argument.url)
-        else:
-            print("No SQL command found by keyword: '%s'" % keyword)
 
+        cmd = sql_cmd(keyword, attachment)
         dbconnection = psycopg2.connect("dbname=%s user=%s"
                                         % (DATABASE_NAME, USER_NAME))
         cursor = dbconnection.cursor()
         try:
-            cursor.execute(sql_cmd)
+            cursor.execute(cmd)
             if keyword == 'query_by_id':
                 tmp = cursor.fetchone()
                 return blogpost_from_DB(tmp)

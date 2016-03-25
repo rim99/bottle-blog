@@ -30,7 +30,7 @@ selector = sys.argv[1]
 print(selector)
 if selector == 'post':
     file = sys.argv[2]
-    print("file name：", file)
+    print("file name: ", file)
     category = ''
     try:
         category = sys.argv[3]
@@ -43,11 +43,12 @@ elif selector == 'del':
     blog_id = ''
     try:
         blog_id = sys.argv[3]
+        print('Delete post: %s!' % blog_id)
     except:
         print('Delete the last post!')
     finally:
         delete_post(blog_id)
-        print("%s is deleted" % blog_id)
+        print("Deleted")
 elif selector == 'ls':
     list_all()
 else:
