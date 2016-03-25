@@ -28,15 +28,9 @@ def error404(error):
 def server_static(filename):
     return static_file(filename, root=static_path)
 
-@app.route('/tag/<tag_id>')
-def catagory(tag_id):
-    blog_posts = BlogPost.queryByTag(tag_id)
-    template = TEMPLATE_ENV.get_template('home.html')
-    return template.render(post_list=blog_posts)
-
 @app.route('/blogpost/<blog_id>')
 def blogpost(blog_id):
-    blog_post = BlogPost.query(blog_id)
+    blog_post = BlogPost.query_by_id(blog_id)
     template = TEMPLATE_ENV.get_template('post.html')
     return template.render(post=blog_post)
 
@@ -45,33 +39,51 @@ def aboutme():
     template = TEMPLATE_ENV.get_template('aboutme.html')
     return template.render()
 
-@app.route('/archives')
-def archives():
-    return 'The archives page is under consturction.'
-
 @app.route('/admin')
 def admin():
     return '<h1>Hello, this is Admin Page!</h1>'
 
+class Page_Info(object):
+    '''This class contains some infomation about the current page:
+    1.its page number
+    2.whether it has next page or previous page
+    '''
+    def __init__(self, current_page=1, has_previous=False, has_next=False):
+        self.page = current_page
+        self.has_previous = has_previous
+        self.has_next = has_next
+        self.data = []
+    @classmethod
+    def create(cls, page, all_blog_posts):
+        page_num = int(page)
+        page_info = Page_Info(page_num, False, False)
+        blog_posts = all_blog_posts[(page_num - 1) * POSTS_COUNT_PER_PAGE: page_num * POSTS_COUNT_PER_PAGE]
+        if page_num > 1:
+            page_info.has_previous = True
+        if page_num * POSTS_COUNT_PER_PAGE < len(all_blog_posts):
+            page_info.has_next = True
+        page_info.data = blog_posts
+        return page_info
+
 @app.route('/')
 @app.route('/page=<page>')
 def index(page='1'):
-    class Page_Info(object):
-        def __init__(self, current_page=1, has_previous=False, has_next=False):
-            self.page = current_page
-            self.has_previous = has_previous
-            self.has_next = has_next
-    page_num = int(page)
-    all_blog_posts = BlogPost.getAll()
-    blog_posts = all_blog_posts[(page_num-1)*POSTS_COUNT_PER_PAGE: page_num*POSTS_COUNT_PER_PAGE]
-    current_page_info = Page_Info(page_num, False, False)
-    if page_num > 1:
-        current_page_info.has_previous = True
-    if page_num*POSTS_COUNT_PER_PAGE < len(all_blog_posts):
-        current_page_info.has_next = True
+    all_blog_posts = BlogPost.get_all()
+    current_page_info = Page_Info.create(page, all_blog_posts)
     template = TEMPLATE_ENV.get_template('home.html')
-    return template.render(post_list=blog_posts, page_info=current_page_info)
+    return template.render(post_list=current_page_info.data, page_info=current_page_info)
 
+@app.route('/tag/<tag>/')
+@app.route('/tag/<tag>/page=<page>')
+def list_all_by_tag(tag, page='1'):
+    all_blog_posts = BlogPost.query_by_tag(tag)
+    current_page_info = Page_Info.create(page, all_blog_posts)
+    template = TEMPLATE_ENV.get_template('home.html')
+    return template.render(post_list=current_page_info.data, page_info=current_page_info)
+
+@app.route('/archives')
+def archives():
+    return 'The archives page is under consturction.'
 
 container = tornado.wsgi.WSGIContainer(app)
 http_server = tornado.httpserver.HTTPServer(container)

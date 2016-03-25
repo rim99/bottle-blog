@@ -23,6 +23,19 @@ class BlogPost(object):
 
     @classmethod
     def execute_sql_cmd(cls, keyword, argument):
+        '''Str, Str or Blogpost -> Blogpost or [Blogpost, Blogpost, ...] or JUST EXECUTE THE COMMAND
+        keyword -- Str, an identification of the command
+        argument -- Str, varys from different keywords
+                or Blogpost that will be saved
+        '''
+        def blogpost_from_DB(result):
+            '''SQL database query result -> Blogpost
+            This function transform the result of SQL database query command to an instance of Blogpost Class.
+            '''
+            blog_post = BlogPost(result[1], result[2], result[3], result[4])
+            blog_post.post_date = result[5]
+            blog_post.url = result[6]
+            return blog_post
         sql_cmd = ''
         if keyword == "query_by_id":
             sql_cmd = "SELECT * FROM blogpost WHERE blogID = '%s';" % argument
@@ -36,28 +49,21 @@ class BlogPost(object):
             sql_cmd = "INSERT INTO blogpost (title, category, content, blogID, postdate, url) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" %\
             (argument.title, argument.category, argument.content, argument.blog_id, argument.post_date, argument.url)
         else:
-            print('No SQL command found by keyword: "%s"' % keyword)
+            print("No SQL command found by keyword: '%s'" % keyword)
 
         dbconnection = psycopg2.connect("dbname=%s user=%s"
                                         % (DATABASE_NAME, USER_NAME))
         cursor = dbconnection.cursor()
         try:
-            cursor.execute(
-                sql_cmd
-            )
-            if "query" in keyword:
+            cursor.execute(sql_cmd)
+            if keyword == 'query_by_id':
                 tmp = cursor.fetchone()
-                blog_post = BlogPost(tmp[1], tmp[2], tmp[3], tmp[4])
-                blog_post.post_date = tmp[5]
-                blog_post.url = tmp[6]
-                return blog_post
-            elif keyword == "get_all":
+                return blogpost_from_DB(tmp)
+            elif keyword == 'get_all' or keyword == "query_by_tag":
                 blog_list = cursor.fetchall()
                 blog_posts = []
                 for tmp in blog_list:
-                    blog_post = BlogPost(tmp[1], tmp[2], tmp[3], tmp[4])
-                    blog_post.post_date = tmp[5]
-                    blog_post.url = tmp[6]
+                    blog_post = blogpost_from_DB(tmp)
                     blog_posts.append(blog_post)
                 return blog_posts
         except:
@@ -68,11 +74,11 @@ class BlogPost(object):
             dbconnection.close()
 
     @classmethod
-    def query(cls, blog_id):
+    def query_by_id(cls, blog_id):
         return BlogPost.execute_sql_cmd("query_by_id", blog_id)
 
     @classmethod
-    def queryByTag(cls, tag):
+    def query_by_tag(cls, tag):
         return BlogPost.execute_sql_cmd("query_by_tag", tag)
 
     @classmethod
@@ -81,7 +87,7 @@ class BlogPost(object):
         return
 
     @classmethod
-    def getAll(cls):
+    def get_all(cls):
         return BlogPost.execute_sql_cmd("get_all", '')
 
     def print(self):

@@ -95,10 +95,7 @@ MARKDOWN_EXTENSIONS = (
     'disable-indented-code'
 )  # remove 'no-intra-emphasis'
 
-
-
-def saveFile(file, category=''):
-
+def save_post(file, category=''):
     class HighlighterRenderer(HtmlRenderer):
         def blockcode(self, text, lang):
             if not lang:
@@ -107,7 +104,6 @@ def saveFile(file, category=''):
             lexer = get_lexer_by_name(lang, stripall=True)
             formatter = HtmlFormatter()
             return highlight(text, lexer, formatter)
-
     if category == '':
         print('No tag! Abort.')
         return
@@ -121,18 +117,19 @@ def saveFile(file, category=''):
         content_html = (md(f.read()))
     blog_id = PurePosixPath(file).stem  # use the filename without the extension as the blog_id
     new_blog = BlogPost(title, category, content_html, blog_id)
-    old = BlogPost.query(blog_id)
+    old = BlogPost.query_by_id(blog_id)
     if isinstance(old, BlogPost):
         print("The same blog id already exists. \nOverwriting......")
         old.delete()
     else:
         print("New blog. Posting...")
     new_blog.save()
+    print("Successfully posted.")
     return
 
 def list_all():
     try:
-        blog_posts = BlogPost.getAll()
+        blog_posts = BlogPost.get_all()
         for blog in blog_posts:
             print(blog_posts.index(blog))
             blog.print()
@@ -140,20 +137,20 @@ def list_all():
         print('Error when list all files!')
 
 def list_by_tag(tag):
-    blog_posts = BlogPost.queryByTag(tag)
+    blog_posts = BlogPost.query_by_tag(tag)
     if len(blog_posts) == 0:
         print('No file was found by tag: %s!' % tag)
     for blog in blog_posts:
         print(blog_posts.index(blog))
         blog.print()
 
-def deleteFile(blog_id=''):
+def delete_post(blog_id=''):
     if blog_id == '':
-        blog_posts = BlogPost.getAll()
+        blog_posts = BlogPost.get_all()
         last_blog = blog_posts[-1]
         blog_id = last_blog.blog_id
     try:
         BlogPost.delete_by_id(blog_id)
     except:
-        print("Error!")
+        print("Error when deleting!")
     return

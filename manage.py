@@ -3,9 +3,8 @@
 
 __author__ = 'Rim99'
 
-'''
-Usage:
-[1] List all blog posts -
+'''Usage:
+[1] List all blog posts --
         python3 manage.py ls
 
 [2] Post new blog --
@@ -16,8 +15,8 @@ Usage:
     if no blog id provided, the last post will be deleted.
 '''
 
-from blogpost.manage import saveFile
-from blogpost.manage import deleteFile
+from blogpost.manage import save_post
+from blogpost.manage import delete_post
 from blogpost.manage import list_all
 import sys
 
@@ -26,15 +25,6 @@ SELECTOR = {
     'del',
     'ls'
 }
-
-def postFile(file, category):
-    try:
-        saveFile(file, category)
-        print('Successfully posted')
-    except:
-        print('Error when posting')
-    finally:
-        return
 
 selector = sys.argv[1]
 print(selector)
@@ -46,8 +36,9 @@ if selector == 'post':
         category = sys.argv[3]
         print("category: ", category)
     except:
-        print("Didn't find a tag...Abort")
-    postFile(file, category)
+        pass
+    finally:
+        save_post(file, category)
 elif selector == 'del':
     blog_id = ''
     try:
@@ -55,13 +46,9 @@ elif selector == 'del':
     except:
         print('Delete the last post!')
     finally:
-        deleteFile(blog_id)
-        print("%s post deleted" % blog_id)
+        delete_post(blog_id)
+        print("%s is deleted" % blog_id)
 elif selector == 'ls':
     list_all()
-
-
-
-
-
-
+else:
+    print("Selector '%s' doesn't existed." % selector)
