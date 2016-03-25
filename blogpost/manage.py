@@ -95,16 +95,19 @@ MARKDOWN_EXTENSIONS = (
     'disable-indented-code'
 )  # remove 'no-intra-emphasis'
 
-class HighlighterRenderer(HtmlRenderer):
-    def blockcode(self, text, lang):
-        if not lang:
-            return '\n<pre><code>{}</code></pre>\n'.format(
-                houdini.escape_html(text.strip()))
-        lexer = get_lexer_by_name(lang, stripall=True)
-        formatter = HtmlFormatter()
-        return highlight(text, lexer, formatter)
+
 
 def saveFile(file, category=''):
+
+    class HighlighterRenderer(HtmlRenderer):
+        def blockcode(self, text, lang):
+            if not lang:
+                return '\n<pre><code>{}</code></pre>\n'.format(
+                    houdini.escape_html(text.strip()))
+            lexer = get_lexer_by_name(lang, stripall=True)
+            formatter = HtmlFormatter()
+            return highlight(text, lexer, formatter)
+
     if category == '':
         print('No tag! Abort.')
         return

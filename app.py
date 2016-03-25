@@ -6,7 +6,6 @@ from bottle import Bottle, default_app, route, run, error, static_file
 from jinja2 import Environment, FileSystemLoader
 from blogpost.models import BlogPost
 
-
 import tornado.wsgi
 import tornado.ioloop
 import tornado.httpserver
@@ -19,12 +18,6 @@ TEMPLATE_ENV = Environment(loader=FileSystemLoader(path))
 POSTS_COUNT_PER_PAGE = 5
 
 app = application = Bottle()
-
-class Page_Info(object):
-    def __init__(self, current_page=1, has_previous=False, has_next=False):
-        self.page = current_page
-        self.has_previous = has_previous
-        self.has_next = has_next
 
 @app.error(404)
 def error404(error):
@@ -63,6 +56,11 @@ def admin():
 @app.route('/')
 @app.route('/page=<page>')
 def index(page='1'):
+    class Page_Info(object):
+        def __init__(self, current_page=1, has_previous=False, has_next=False):
+            self.page = current_page
+            self.has_previous = has_previous
+            self.has_next = has_next
     page_num = int(page)
     all_blog_posts = BlogPost.getAll()
     blog_posts = all_blog_posts[(page_num-1)*POSTS_COUNT_PER_PAGE: page_num*POSTS_COUNT_PER_PAGE]
