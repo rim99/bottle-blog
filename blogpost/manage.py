@@ -133,7 +133,7 @@ def list_all():
         print('Total: ', len(blog_posts))
         for blog in blog_posts:
             print(blog_posts.index(blog))
-            blog.print()
+            blog.detail_info()
     except:
         print('Error when list all files!\n')
         raise
@@ -144,7 +144,7 @@ def list_by_tag(tag):
         print('No file was found by tag: %s!' % tag)
     for blog in blog_posts:
         print(blog_posts.index(blog))
-        blog.print()
+        blog.detail_info()
 
 def delete_post(blog_id=''):
     if blog_id == '':

@@ -23,14 +23,14 @@ class BlogPost(object):
 
     @classmethod
     def execute_sql_cmd(cls, keyword, attachment):
-        '''Str, Str or Blogpost -> Blogpost or [Blogpost, Blogpost, ...] or JUST EXECUTE THE COMMAND
+        '''Str, Str or Blogpost -> Blogpost or [Blogpost, ...] or JUST EXECUTE THE COMMAND
         keyword -- Str, an identification of the command
         argument -- Str, varys from different keywords
                 or Blogpost that will be saved
         '''
         def sql_cmd(selector_id, attachment_inner):
             '''Str, Str or Blogpost -> Str
-            Return SQL command according to the key_word.
+            Return SQL command according to the selector_id.
             '''
             if selector_id == "query_by_id":
                 return "SELECT * FROM blogpost WHERE blogID = '%s';" % attachment_inner
@@ -97,7 +97,7 @@ class BlogPost(object):
     def get_all(cls):
         return BlogPost.execute_sql_cmd("get_all", '')
 
-    def print(self):
+    def detail_info(self):
         print('title:%s     category:%s     post date:%s     blogID:%s' %
               (self.title, self.category, self.post_date, self.blog_id))
         return
