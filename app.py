@@ -73,7 +73,7 @@ def index(page='1'):
     template = TEMPLATE_ENV.get_template('home.html')
     return template.render(post_list=current_page_info.data, page_info=current_page_info)
 
-@app.route('/tag/<tag>/')
+@app.route('/tag/<tag>')
 @app.route('/tag/<tag>/page=<page>')
 def list_all_by_tag(tag, page='1'):
     all_blog_posts = BlogPost.query_by_tag(tag)
