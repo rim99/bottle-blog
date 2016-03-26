@@ -23,7 +23,8 @@ class BlogPost(object):
 
     @classmethod
     def execute_sql_cmd(cls, keyword, attachment):
-        '''Str, Str or Blogpost -> Blogpost or [Blogpost, ...] or JUST EXECUTE THE COMMAND
+        '''Str, Str or Blogpost -> Blogpost or [Blogpost, ...]
+                                 or JUST EXECUTE THE COMMAND
         keyword -- Str, an identification of the command
         argument -- Str, varys from different keywords
                 or Blogpost that will be saved
