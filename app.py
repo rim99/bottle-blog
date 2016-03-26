@@ -44,9 +44,10 @@ def admin():
     return '<h1>Hello, this is Admin Page!</h1>'
 
 class Page_Info(object):
-    '''This class contains some infomation about the current page:
-    1.its page number
-    2.whether it has next page or previous page
+    '''This class contains some infomation about the posts list page:
+    1. its page number
+    2. whether it has next page or previous page
+    3. its posts list
     '''
     def __init__(self, current_page=1, has_previous=False, has_next=False):
         self.page = current_page
