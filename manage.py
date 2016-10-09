@@ -43,12 +43,11 @@ elif selector == 'del':
     blog_id = ''
     try:
         blog_id = sys.argv[3]
-        print('Delete post: %s!' % blog_id)
     except:
         print('Delete the last post!')
     finally:
         delete_post(blog_id)
-        print("Deleted")
+        print("%s is deleted" % blog_id)
 elif selector == 'ls':
     list_all()
 else:

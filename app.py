@@ -24,9 +24,9 @@ def error404(error):
     template = TEMPLATE_ENV.get_template('error.html')
     return template.render()
 
-@app.route('/_static/<filename>')
-def server_static(filename):
-    return static_file(filename, root=static_path)
+# @app.route('/_static/<filename>')
+# def server_static(filename):
+#     return static_file(filename, root=static_path)
 
 @app.route('/blogpost/<blog_id>')
 def blogpost(blog_id):
@@ -44,10 +44,9 @@ def admin():
     return '<h1>Hello, this is Admin Page!</h1>'
 
 class Page_Info(object):
-    '''This class contains some infomation about the posts list page:
-    1. its page number
-    2. whether it has next page or previous page
-    3. its posts list
+    '''This class contains some infomation about the current page:
+    1.its page number
+    2.whether it has next page or previous page
     '''
     def __init__(self, current_page=1, has_previous=False, has_next=False):
         self.page = current_page
@@ -74,8 +73,8 @@ def index(page='1'):
     template = TEMPLATE_ENV.get_template('home.html')
     return template.render(post_list=current_page_info.data, page_info=current_page_info)
 
-@app.route('/tag/<tag>')
-@app.route('/tag/<tag>/page=<page>')
+@app.route('/tag=<tag>/')
+@app.route('/tag=<tag>/page=<page>')
 def list_all_by_tag(tag, page='1'):
     all_blog_posts = BlogPost.query_by_tag(tag)
     current_page_info = Page_Info.create(page, all_blog_posts)
@@ -88,9 +87,10 @@ def archives():
 
 container = tornado.wsgi.WSGIContainer(app)
 http_server = tornado.httpserver.HTTPServer(container)
-http_server.bind(80, address='0.0.0.0')
-# http_server.bind(8081, address='127.0.0.1')
-http_server.start(2)
+# http_server.bind(80, address='0.0.0.0')
+http_server.bind(8080, address='127.0.0.1')
+http_server.bind(8081, address='127.0.0.1')
+http_server.start()
 tornado.ioloop.IOLoop.current().start()
 
 

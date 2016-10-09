@@ -23,25 +23,24 @@ class BlogPost(object):
 
     @classmethod
     def execute_sql_cmd(cls, keyword, attachment):
-        '''Str, Str or Blogpost -> Blogpost or [Blogpost, ...]
-                                 or JUST EXECUTE THE COMMAND
+        '''Str, Str or Blogpost -> Blogpost or [Blogpost, Blogpost, ...] or JUST EXECUTE THE COMMAND
         keyword -- Str, an identification of the command
         argument -- Str, varys from different keywords
                 or Blogpost that will be saved
         '''
-        def sql_cmd(selector_id, attachment_inner):
+        def sql_cmd(key_word, attachment_inner):
             '''Str, Str or Blogpost -> Str
-            Return SQL command according to the selector_id.
+            Return SQL command according to the key_word.
             '''
-            if selector_id == "query_by_id":
+            if key_word == "query_by_id":
                 return "SELECT * FROM blogpost WHERE blogID = '%s';" % attachment_inner
-            elif selector_id == "query_by_tag":
+            elif key_word == "query_by_tag":
                 return "SELECT * FROM blogpost WHERE category = '%s' ORDER BY postdate DESC;" % attachment_inner
-            elif selector_id == "get_all":
+            elif key_word == "get_all":
                 return "SELECT * FROM blogpost ORDER BY postdate DESC;"
-            elif selector_id == "delete_by_id":
+            elif key_word == "delete_by_id":
                 return "DELETE FROM blogpost WHERE blogID = '%s';" % attachment_inner
-            elif selector_id == "save" and isinstance(attachment_inner, BlogPost):
+            elif key_word == "save" and isinstance(attachment_inner, BlogPost):
                 return "INSERT INTO blogpost (title, category, content, blogID, postdate, url) \
                 VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % \
                 (attachment_inner.title, attachment_inner.category, attachment_inner.content,
@@ -57,7 +56,6 @@ class BlogPost(object):
             blog_post.post_date = result[5]
             blog_post.url = result[6]
             return blog_post
-
         cmd = sql_cmd(keyword, attachment)
         dbconnection = psycopg2.connect("dbname=%s user=%s"
                                         % (DATABASE_NAME, USER_NAME))
@@ -98,8 +96,8 @@ class BlogPost(object):
     def get_all(cls):
         return BlogPost.execute_sql_cmd("get_all", '')
 
-    def detail_info(self):
-        print('title:%s     category:%s     post date:%s     blogID:%s' %
+    def print(self):
+        print(u'title:%s     category:%s     post date:%s     blogID:%s' %
               (self.title, self.category, self.post_date, self.blog_id))
         return
 
