@@ -6,9 +6,7 @@ This is a personal blog app based on [Bottle](http://bottlepy.org/), and uses [T
 
 ### Deployment
 
-The `_config/Dockerfile` and `_config/lighttpd.conf` are unavailable right now. 
-
-Use `_config/configure.sh` to complete the deployment. 
+Use `deploy.sh` to complete the deployment. 
 
 ### Database Deatil
 
