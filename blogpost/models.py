@@ -111,6 +111,6 @@ class BlogPost(object):
         return
 
     def delete(self):
-        BlogPost.delete_by_id(self.blog_id)
+        executor.submit(BlogPost.delete_by_id, self.blog_id)
         return
 
