@@ -5,12 +5,15 @@ __author__ = 'Rim99'
 
 import psycopg2
 import datetime
+import concurrent.futures
 
 DATABASE_NAME = 'BlogDatabase'
 HOST = 'localhost'
 USER_NAME = 'root'
 PASSWORD = 'passwd'
 DOMAIN_NAME = 'http://www.rim99.com'
+
+executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
 
 class BlogPost(object):
     def __init__(self, title, category, content, blog_id):
@@ -81,20 +84,22 @@ class BlogPost(object):
 
     @classmethod
     def query_by_id(cls, blog_id):
-        return BlogPost.execute_sql_cmd("query_by_id", blog_id)
+        return executor.submit(BlogPost.execute_sql_cmd, "query_by_id", blog_id).result()
 
     @classmethod
     def query_by_tag(cls, tag):
-        return BlogPost.execute_sql_cmd("query_by_tag", tag)
+        return executor.submit(BlogPost.execute_sql_cmd, "query_by_tag", tag).result()
+
 
     @classmethod
     def delete_by_id(cls, blog_id):
-        BlogPost.execute_sql_cmd("delete_by_id", blog_id)
+        executor.submit(BlogPost.execute_sql_cmd, "delete_by_id", blog_id)
         return
 
     @classmethod
     def get_all(cls):
-        return BlogPost.execute_sql_cmd("get_all", '')
+        return executor.submit(BlogPost.execute_sql_cmd, "get_all", '').result()
+
 
     def print(self):
         print(u'title:%s     category:%s     post date:%s     blogID:%s' %
@@ -102,7 +107,7 @@ class BlogPost(object):
         return
 
     def save(self):
-        BlogPost.execute_sql_cmd("save", self)
+        executor.submit(BlogPost.execute_sql_cmd, "save", self)
         return
 
     def delete(self):
