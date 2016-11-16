@@ -7,6 +7,7 @@ import datetime
 from markdown import markdown
 
 DOMAIN_NAME = 'http://www.rim99.com'
+POSTS_COUNT_PER_PAGE = 10
 
 class BlogPost(object):
     def __init__(self, title, category, content, blog_id,
@@ -31,16 +32,22 @@ class BlogPost(object):
         return BlogPost(result[1], result[2], result[3], result[4], result[5], result[6])
 
     @classmethod
-    def get_sql_cmd(cls, key_word='', attachment=None, page_num=1):
+    def get_sql_cmd(cls, total, key_word='', attachment=None, page_num=1):
         '''Str, Str or Blogpost -> Str
         Return SQL command according to the key_word.
         '''
         if key_word == "query_by_id":
-            return "SELECT * FROM blogpost WHERE blogID = '{}';".format(attachment)
+            return "SELECT * FROM blogpost WHERE blogID = '{0}';".format(attachment)
         elif key_word == "query_by_tag":
-            return "SELECT * FROM blogpost WHERE category = '{}' ORDER BY postdate DESC;".format(attachment)
+            return "SELECT * FROM blogpost WHERE category = '{0}' AND ID > {1} AND ID <= {2} \
+            ORDER BY postdate DESC;".format(
+                attachment,
+                max(0, total - page_num * POSTS_COUNT_PER_PAGE),
+                total - (page_num - 1) * POSTS_COUNT_PER_PAGE)
         elif key_word == "get_all":
-            return "SELECT * FROM blogpost ORDER BY postdate DESC;"
+            return "SELECT * FROM blogpost WHERE ID > {0} AND ID <= {1} ORDER BY postdate DESC;".format(
+                max(0, total - page_num * POSTS_COUNT_PER_PAGE),
+                total - (page_num - 1) * POSTS_COUNT_PER_PAGE)
         elif key_word == "delete_by_id":
             return "DELETE FROM blogpost WHERE blogID = '{}';".format(attachment)
         elif key_word == "save" and isinstance(attachment, BlogPost):
@@ -53,8 +60,3 @@ class BlogPost(object):
 
     def markdownize(self):
         self.content = markdown(self.content)
-
-
-
-
-

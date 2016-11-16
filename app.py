@@ -9,7 +9,7 @@ from blogpost import BlogPost
 from dbservice import Task, db_query_service
 import os, argparse, multiprocessing, concurrent.futures
 
-POSTS_COUNT_PER_PAGE = 5
+POSTS_COUNT_PER_PAGE = 10
 task_queue = multiprocessing.Queue()
 app = application = Bottle()
 # define the dir of templates
@@ -28,8 +28,9 @@ class Page_Info(object):
         self.data = data
 
     @staticmethod
-    def get_list(keyword, page):
-        cmd = BlogPost.get_sql_cmd(key_word=keyword, page_num=int(page))
+    def get_list(keyword, page, attachment=None, total=0):
+        cmd = BlogPost.get_sql_cmd(total=total, key_word=keyword,
+                                   page_num=int(page), attachment=attachment)
         recv_conn, send_conn = multiprocessing.Pipe()
         task = Task(cmd, send_conn, 'list')
         task_queue.put(task)
@@ -45,9 +46,9 @@ class Page_Info(object):
         task = Task(cmd, send_conn, 'list')
         task_queue.put(task)
         total = recv_conn.recv()[0][0]
-        # print('total -> ', total)
+        # print('total -> ', total) ==> [(i,)]
         page_num = int(page)
-        return cls(current_page=page_num,
+        return total, cls(current_page=page_num,
                    has_previous=page_num > 1,
                    has_next=page_num * POSTS_COUNT_PER_PAGE < total,
                    data=[])
@@ -56,17 +57,19 @@ class Page_Info(object):
 @app.route('/page=<page>')
 def index(page='1'):
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as e:
-        fa = e.submit(Page_Info.get_list, 'get_all', page)
-        fb = e.submit(Page_Info.get_page_info, page)
+        fa = e.submit(Page_Info.get_page_info, page)
         template = TEMPLATE_ENV.get_template('home.html')
-        return template.render(post_list=fa.result(), page_info=fb.result())
+        total, page_info = fa.result()
+        fb = e.submit(Page_Info.get_list, 'get_all', page, total=total)
+        return template.render(page_info=page_info, post_list=fb.result())
 
 @app.route('/tag=<tag>/')
 @app.route('/tag=<tag>/page=<page>')
 def list_all_by_tag(tag, page='1'):
+    print('tag:', tag)
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as e:
-        fa = e.submit(Page_Info.get_list, 'query_by_tag', page)
-        fb = e.submit(Page_Info.get_page_info(page, tag))
+        fa = e.submit(Page_Info.get_list, 'query_by_tag', page, tag)
+        fb = e.submit(Page_Info.get_page_info, page, tag)
         template = TEMPLATE_ENV.get_template('home.html')
         return template.render(post_list=fa.result(), page_info=fb.result())
 
