@@ -40,20 +40,22 @@ class BlogPost(object):
             return "SELECT * FROM blogpost WHERE blogID = '{0}';".format(attachment)
         elif key_word == "query_by_tag":
             return "(SELECT * FROM blogpost WHERE category = '{0}' ORDER BY postdate DESC LIMIT {1}) EXCEPT \
-             (SELECT * FROM blogpost WHERE category = '{0}' ORDER BY postdate DESC LIMIT {2});".format(
+             (SELECT * FROM blogpost WHERE category = '{0}' ORDER BY postdate DESC LIMIT {2}) \
+             ORDER BY postdate DESC;;".format(
                 attachment,
                 page_num * POSTS_COUNT_PER_PAGE,
                 min(total, (page_num - 1) * POSTS_COUNT_PER_PAGE))
         elif key_word == "get_all":
-            return "(SELECT * FROM blogpost ORDER BY postdate DESC LIMIT {0})\
-             EXCEPT (SELECT * FROM blogpost ORDER BY postdate DESC LIMIT {1});".format(
+            return "(SELECT * FROM blogpost ORDER BY postdate DESC LIMIT {0}) \
+             EXCEPT (SELECT * FROM blogpost ORDER BY postdate DESC LIMIT {1}) \
+             ORDER BY postdate DESC;".format(
                 page_num * POSTS_COUNT_PER_PAGE,
                 min(total, (page_num - 1) * POSTS_COUNT_PER_PAGE))
         elif key_word == "delete_by_id":
             return "DELETE FROM blogpost WHERE blogID = '{}';".format(attachment)
         elif key_word == "save" and isinstance(attachment, BlogPost):
             return "INSERT INTO blogpost (title, category, content, blogID, postdate, url) \
-            VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}');".format(attachment.title, attachment.category,
+             VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}');".format(attachment.title, attachment.category,
                                                                  attachment.content, attachment.blog_id,
                                                                  attachment.post_date, attachment.url)
         else:
