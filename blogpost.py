@@ -39,18 +39,21 @@ class BlogPost(object):
         if key_word == "query_by_id":
             return "SELECT * FROM blogpost WHERE blogID = '{0}';".format(attachment)
         elif key_word == "query_by_tag":
-            return "(SELECT * FROM blogpost WHERE category = '{0}' ORDER BY postdate DESC LIMIT {1}) EXCEPT \
-             (SELECT * FROM blogpost WHERE category = '{0}' ORDER BY postdate DESC LIMIT {2}) \
-             ORDER BY postdate DESC;;".format(
+            return "(SELECT * FROM blogpost WHERE category = '{0}' ORDER BY postdate DESC \
+            LIMIT {1} OFFSET {1};".format(
                 attachment,
-                page_num * POSTS_COUNT_PER_PAGE,
-                min(total, (page_num - 1) * POSTS_COUNT_PER_PAGE))
+                POSTS_COUNT_PER_PAGE,
+                (page_num - 1) * POSTS_COUNT_PER_PAGE)
         elif key_word == "get_all":
-            return "(SELECT * FROM blogpost ORDER BY postdate DESC LIMIT {0}) \
-             EXCEPT (SELECT * FROM blogpost ORDER BY postdate DESC LIMIT {1}) \
-             ORDER BY postdate DESC;".format(
-                page_num * POSTS_COUNT_PER_PAGE,
-                min(total, (page_num - 1) * POSTS_COUNT_PER_PAGE))
+            # return "(SELECT * FROM blogpost ORDER BY postdate DESC LIMIT {0}) \
+            #  EXCEPT (SELECT * FROM blogpost ORDER BY postdate DESC LIMIT {1}) \
+            #  ORDER BY postdate DESC;".format(
+            #     page_num * POSTS_COUNT_PER_PAGE,
+            #     min(total, (page_num - 1) * POSTS_COUNT_PER_PAGE) if page_num != 1 else 'NULL')
+
+            return "SELECT * FROM blogpost ORDER BY postdate DESC LIMIT {0} OFFSET {1};".format(
+                POSTS_COUNT_PER_PAGE,
+                (page_num-1) * POSTS_COUNT_PER_PAGE)
         elif key_word == "delete_by_id":
             return "DELETE FROM blogpost WHERE blogID = '{}';".format(attachment)
         elif key_word == "save" and isinstance(attachment, BlogPost):

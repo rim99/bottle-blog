@@ -72,10 +72,11 @@ def index(page='1'):
 def list_all_by_tag(tag, page='1'):
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as e:
-            fa = e.submit(Page_Info.get_list, 'query_by_tag', page, tag)
-            fb = e.submit(Page_Info.get_page_info, page, tag)
+            fa = e.submit(Page_Info.get_page_info, page, tag)
             template = TEMPLATE_ENV.get_template('home.html')
-        return template.render(post_list=fa.result(), page_info=fb.result())
+            total, page_info = fa.result()
+            fb = e.submit(Page_Info.get_list, 'query_by_tag', page, tag, total=total)
+        return template.render(post_list=fb.result(), page_info=page_info)
     except:
         return error404()
 
