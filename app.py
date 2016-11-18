@@ -56,26 +56,34 @@ class Page_Info(object):
 @app.route('/')
 @app.route('/page=<page>')
 def index(page='1'):
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as e:
-        fa = e.submit(Page_Info.get_page_info, page)
-        template = TEMPLATE_ENV.get_template('home.html')
-        total, page_info = fa.result()
-        fb = e.submit(Page_Info.get_list, 'get_all', page, total=total)
+    try:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as e:
+            fa = e.submit(Page_Info.get_page_info, page)
+            template = TEMPLATE_ENV.get_template('home.html')
+            total, page_info = fa.result()
+            fb = e.submit(Page_Info.get_list, 'get_all', page, total=total)
         return template.render(page_info=page_info, post_list=fb.result())
+    except:
+        return error404()
 
+@app.route('/tag=<tag>')
 @app.route('/tag=<tag>/')
 @app.route('/tag=<tag>/page=<page>')
 def list_all_by_tag(tag, page='1'):
-    print('tag:', tag)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as e:
-        fa = e.submit(Page_Info.get_list, 'query_by_tag', page, tag)
-        fb = e.submit(Page_Info.get_page_info, page, tag)
-        template = TEMPLATE_ENV.get_template('home.html')
+    try:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as e:
+            fa = e.submit(Page_Info.get_list, 'query_by_tag', page, tag)
+            fb = e.submit(Page_Info.get_page_info, page, tag)
+            template = TEMPLATE_ENV.get_template('home.html')
         return template.render(post_list=fa.result(), page_info=fb.result())
+    except:
+        return error404()
 
 @app.route('/blogpost/<blog_id>')
 def blogpost(blog_id):
-    cmd = BlogPost.get_sql_cmd('query_by_id', blog_id)
+    cmd = BlogPost.get_sql_cmd(key_word='query_by_id', attachment=blog_id)
+    if cmd is None:
+        return error404()
     recv_conn, send_conn = multiprocessing.Pipe()
     task = Task(cmd, send_conn, 'obj')
     task_queue.put(task)
@@ -84,7 +92,7 @@ def blogpost(blog_id):
     return template.render(post=BlogPost.init_from_db_result(blog_post))
 
 @app.error(404)
-def error404(error):
+def error404(error=None):
     template = TEMPLATE_ENV.get_template('error.html')
     return template.render()
 
