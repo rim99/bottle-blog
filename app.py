@@ -57,12 +57,10 @@ class Page_Info(object):
 @app.route('/page=<page>')
 def index(page='1'):
     try:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as e:
-            fa = e.submit(Page_Info.get_page_info, page)
-            template = TEMPLATE_ENV.get_template('home.html')
-            total, page_info = fa.result()
-            fb = e.submit(Page_Info.get_list, 'get_all', page, total=total)
-        return template.render(page_info=page_info, post_list=fb.result())
+        template = TEMPLATE_ENV.get_template('home.html')
+        total, page_info = Page_Info.get_page_info(page)
+        post_list = Page_Info.get_list('get_all', page, total=total)
+        return template.render(post_list=post_list, page_info=page_info)
     except:
         return error404()
 
@@ -71,12 +69,10 @@ def index(page='1'):
 @app.route('/tag=<tag>/page=<page>')
 def list_all_by_tag(tag, page='1'):
     try:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as e:
-            fa = e.submit(Page_Info.get_page_info, page, tag)
-            template = TEMPLATE_ENV.get_template('home.html')
-            total, page_info = fa.result()
-            fb = e.submit(Page_Info.get_list, 'query_by_tag', page, tag, total=total)
-        return template.render(post_list=fb.result(), page_info=page_info)
+        template = TEMPLATE_ENV.get_template('home.html')
+        total, page_info = Page_Info.get_page_info(page, tag)
+        post_list = Page_Info.get_list('query_by_tag', page, tag, total=total)
+        return template.render(post_list=post_list, page_info=page_info)
     except:
         return error404()
 
