@@ -43,7 +43,7 @@ class BlogPost(object):
             LIMIT {1} OFFSET {1};".format(
                 attachment,
                 POSTS_COUNT_PER_PAGE,
-                (page_num - 1) * POSTS_COUNT_PER_PAGE)
+                (page_num - 1) * POSTS_COUNT_PER_PAGE if page_num != 1 else 'Null')
         elif key_word == "get_all":
             # return "(SELECT * FROM blogpost ORDER BY postdate DESC LIMIT {0}) \
             #  EXCEPT (SELECT * FROM blogpost ORDER BY postdate DESC LIMIT {1}) \
@@ -53,7 +53,7 @@ class BlogPost(object):
 
             return "SELECT * FROM blogpost ORDER BY postdate DESC LIMIT {0} OFFSET {1};".format(
                 POSTS_COUNT_PER_PAGE,
-                (page_num-1) * POSTS_COUNT_PER_PAGE)
+                (page_num-1) * POSTS_COUNT_PER_PAGE if page_num != 1 else 'Null')
         elif key_word == "delete_by_id":
             return "DELETE FROM blogpost WHERE blogID = '{}';".format(attachment)
         elif key_word == "save" and isinstance(attachment, BlogPost):
