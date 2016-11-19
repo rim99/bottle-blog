@@ -27,10 +27,10 @@ class Task(object):
 def db_query_service(task_queue, thread_num):
     dbconn = psycopg2.connect(database=DATABASE_NAME, user=USER_NAME)
     lock = threading.Lock()
+    jobs_dict = {'obj': cursor.fetchone,
+                 'list': cursor.fetchall}
     with concurrent.futures.ThreadPoolExecutor(max_workers=thread_num):
         cursor = dbconn.cursor()
-        jobs_dict = {'obj': cursor.fetchone,
-                     'list': cursor.fetchall}
         while True:
             lock.acquire()
             task = task_queue.get()
