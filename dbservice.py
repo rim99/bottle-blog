@@ -31,15 +31,17 @@ def db_query_service(task_queue, thread_num):
         cursor = dbconn.cursor()
         jobs_dict = {'obj': cursor.fetchone,
                      'list': cursor.fetchall}
-        while True:
-            lock.acquire()
-            task = task_queue.get()
-            lock.release()
-            cursor.execute(task.sql_cmd)
-            result = jobs_dict[task.result_type]()
-            task.send_conn.send(result)
-    dbconn.commit()
-    cursor.close()
+        try:
+            while True:
+                lock.acquire()
+                task = task_queue.get()
+                lock.release()
+                cursor.execute(task.sql_cmd)
+                result = jobs_dict[task.result_type]()
+                task.send_conn.send(result)
+        except Exception as msg:
+            print(msg)
+            cursor.close()
     dbconn.close()
 
 def db_update(sql_cmd):
