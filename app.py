@@ -21,11 +21,10 @@ class Page_Info(object):
     1.its page number
     2.whether it has next page or previous page
     '''
-    def __init__(self, current_page=1, has_previous=False, has_next=False, data=[]):
+    def __init__(self, current_page=1, has_previous=False, has_next=False):
         self.page = current_page
         self.has_previous = has_previous
         self.has_next = has_next
-        self.data = data
 
     @staticmethod
     def get_list(keyword, page, attachment=None, total=0):
@@ -50,8 +49,7 @@ class Page_Info(object):
         page_num = int(page)
         return total, cls(current_page=page_num,
                    has_previous=page_num > 1,
-                   has_next=page_num * POSTS_COUNT_PER_PAGE < total,
-                   data=[])
+                   has_next=page_num * POSTS_COUNT_PER_PAGE < total)
 
 @app.route('/')
 @app.route('/page=<page>')
