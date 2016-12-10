@@ -3,10 +3,9 @@
 
 __author__ = 'Rim99'
 
-import psycopg2
+import psycopg2, asyncio
 import psycopg2.extensions as _ext
 from psycopg2._psycopg import connection as _connection
-from asyncio import get_event_loop
 from select import select
 from psycopg2.pool import SimpleConnectionPool
 
@@ -135,15 +134,22 @@ async def process_task(pool, task):
     acurs.close()
     pool.putconn(conn)
 
-def db_query_service(task_queue, connection_num):
-    pool = AsyncConnectionPool(minconn=1, maxconn=connection_num, database=DATABASE_NAME, user=USER_NAME, async=True)
-    loop = get_event_loop()
+async def listen_for_task(pool, task_queue):
     while True:
         try:
             task = task_queue.get()
-            loop.run_until_complete(process_task(pool, task))
+            await process_task(pool, task)
         except Exception as msg:
             print(msg)
+
+def db_query_service(task_queue, connection_num):
+    pool = AsyncConnectionPool(minconn=1, maxconn=connection_num, database=DATABASE_NAME, user=USER_NAME, async=True)
+    loop = asyncio.get_event_loop()
+    try:
+        loop.run_until_complete(listen_for_task(pool, task_queue))
+    except Exception as msg:
+        print(msg)
+        loop.close()
 
 def db_update(sql_cmd):
     dbconn = psycopg2.connect(database=DATABASE_NAME, user=USER_NAME)
