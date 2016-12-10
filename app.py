@@ -137,7 +137,7 @@ if __name__ == '__main__':
     # start http service
     http_server = httpserver.HTTPServer(wsgi.WSGIContainer(app))
     http_server.bind(8080, address='127.0.0.1')
-    http_server.bind(8081, address='127.0.0.1')
+    # http_server.bind(8081, address='127.0.0.1')
     http_server.start()
     ioloop.IOLoop.current().start()
 
