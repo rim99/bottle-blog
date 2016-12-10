@@ -4,7 +4,9 @@
 __author__ = 'Rim99'
 
 import psycopg2
-from asyncio import sleep, get_event_loop
+import psycopg2.extensions as _ext
+from psycopg2._psycopg import connection as _connection
+from asyncio import get_event_loop
 from select import select
 from psycopg2.pool import SimpleConnectionPool
 
@@ -26,15 +28,66 @@ class Task(object):
         self.send_conn = send_conn
         self.result_type = result_type
 
+class async_connection(_connection):
+    def __init__(self, *args, **kwargs):
+        super(async_connection, self).__init__(*args, **kwargs)
+        self.__dict__['ref_count'] = 0
+
+
 class AsyncConnectionPool(SimpleConnectionPool):
-    '''Rewrite a async blocking version
-        The object contains the following params:
+    """Rewrite an async version.
+        The instance contains the following params:
             1. self._pool  # contains available conn
             2. self._used  # conatins the using conn
             3. self._rused  # id(conn) -> key map
             4. self._keys
-    '''
-    async def getconn(self, key=None):
+
+        The connection instance has a special designed attribution -> ref_count.
+        The ref_count will plus 1 once the connection instance is using by a coroutine,
+        and minus 1 when put by a coroutine.
+    """
+    def _connect(self, key=None):
+        """Create a new connection and assign it to 'key' if not None."""
+        conn = psycopg2.connect(*self._args, **self._kwargs, connection_factory=async_connection)
+        if key is not None:
+            self._used[key] = conn
+            self._rused[id(conn)] = key
+        else:
+            self._pool.append(conn)
+        return conn
+
+    def putconn(self, conn, key=None, close=False):
+        """Put away a connection."""
+        conn.ref_count -= 1
+        if conn.ref_count < 0:
+            if self.closed:
+                raise Exception("connection pool is closed")
+            if key is None:
+                key = self._rused.get(id(conn))
+            if not key:
+                raise Exception("trying to put unkeyed connection")
+            if len(self._pool) < self.minconn and not close:
+                # Return the connection into a consistent state before putting
+                # it back into the pool
+                if not conn.closed:
+                    status = conn.get_transaction_status()
+                    if status == _ext.TRANSACTION_STATUS_UNKNOWN:
+                        # server connection lost
+                        self._pool.remove(conn)
+                        conn.close()
+                    elif status != _ext.TRANSACTION_STATUS_IDLE:
+                        # connection in error or in transaction
+                        conn.rollback()
+            else:
+                self._pool.remove(conn)
+                conn.close()
+            # here we check for the presence of key because it can happen that a
+            # thread tries to put back a connection after a call to close
+            if not self.closed or key in self._used:
+                del self._used[key]
+                del self._rused[id(conn)]
+
+    def getconn(self, key=None):
         """Get a free connection and assign it to 'key' if not None."""
         if self.closed:
             raise Exception("Connection pool is closed")
@@ -42,14 +95,17 @@ class AsyncConnectionPool(SimpleConnectionPool):
             key = self._getkey()
         if key in self._used:
             return self._used[key]
-        while True:
-            if self._pool:
-                # add the new conn into the Dict: _used;
-                # new conn is popped from the available list:_pool
-                self._used[key] = conn = self._pool.pop()
-                self._rused[id(conn)] = key
-                return conn
-            await sleep(0.1) # LOW EFFICIENCY
+        # return the connection with minimum ref_count
+        min = self._pool[0]
+        for conn in self._pool[1:]:
+            if conn.ref_count < min.ref_count:
+                min = conn
+        # add the new conn into the Dict: _used;
+        # new conn is popped from the available list:_pool
+        self._used[key] = min
+        self._rused[id(min)] = key
+        min.ref_count += 1
+        return min
 
 async def ready(conn):
     while True:
@@ -64,7 +120,7 @@ async def ready(conn):
             raise psycopg2.OperationalError("poll() returned %s" % state)
 
 async def process_task(pool, task):
-    conn = await pool.getconn()
+    conn = pool.getconn()
     await ready(conn)
     acurs = conn.cursor()
     jobs_dict = {'obj': acurs.fetchone,
