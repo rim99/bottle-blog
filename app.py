@@ -62,7 +62,11 @@ class Page_Info(object):
             recv_conn, send_conn = multiprocessing.Pipe()
             task = Task(cmd, send_conn, 'obj')
             task_queue.put(task)
-            page_info.tag_brief = recv_conn.recv()[0]
+            try:
+                page_info.tag_brief = recv_conn.recv()[0]
+            except TypeError as msg:
+                print(msg)
+                page_info.tag_brief = None
         return total, page_info
 
 @app.route('/')
