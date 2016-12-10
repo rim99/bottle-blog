@@ -129,6 +129,21 @@ h3 {
 	text-decoration: underline;
 }
 
+.tag-brief p.title {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 2em;
+	color: #222;
+	margin-bottom: 0.2em;
+}
+
+.tag-brief p.brief {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 1.2em;
+	color: #3387B7;
+    margin-left: 0.2em;
+	margin-bottom: 0.2em;
+}
+
 .content-subhead {
 	text-transform: uppercase;
 	color: #aaa;

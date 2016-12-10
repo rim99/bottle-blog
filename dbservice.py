@@ -135,8 +135,8 @@ async def process_task(pool, task):
     acurs.close()
     pool.putconn(conn)
 
-def db_query_service(task_queue, thread_num):
-    pool = AsyncConnectionPool(minconn=1, maxconn=4, database=DATABASE_NAME, user=USER_NAME, async=True)
+def db_query_service(task_queue, connection_num):
+    pool = AsyncConnectionPool(minconn=1, maxconn=connection_num, database=DATABASE_NAME, user=USER_NAME, async=True)
     loop = get_event_loop()
     while True:
         try:
