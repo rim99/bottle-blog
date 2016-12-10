@@ -58,7 +58,10 @@ class Page_Info(object):
             page_info.is_tag_list = True
             page_info.tag = tag
             # get tag brief
-            cmd = "SELECT content FROM tagInfo WHERE tag = '{}'".format(tag)
+            cmd = "SELECT content FROM tagInfo WHERE \
+                                        tag1 = '{}' OR \
+                                        tag2 = '{}' OR \
+                                        tag3 = '{}';".format(tag, tag, tag)
             recv_conn, send_conn = multiprocessing.Pipe()
             task = Task(cmd, send_conn, 'obj')
             task_queue.put(task)
