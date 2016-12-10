@@ -96,16 +96,19 @@ class AsyncConnectionPool(SimpleConnectionPool):
         if key in self._used:
             return self._used[key]
         # return the connection with minimum ref_count
-        min = self._pool[0]
+        result = self._pool[0]
         for conn in self._pool[1:]:
-            if conn.ref_count < min.ref_count:
-                min = conn
+            if conn.ref_count < result.ref_count:
+                result = conn
+        if result.ref_count > 1 and len(self._pool) < maxconn:
+            # create new connection
+            result = self._connect(key)
         # add the new conn into the Dict: _used;
         # new conn is popped from the available list:_pool
-        self._used[key] = min
-        self._rused[id(min)] = key
-        min.ref_count += 1
-        return min
+        self._used[key] = result
+        self._rused[id(result)] = key
+        result.ref_count += 1
+        return result
 
 async def ready(conn):
     while True:
