@@ -28,11 +28,14 @@ class Task(object):
         self.send_conn = send_conn
         self.result_type = result_type
 
-class async_connection(_connection):
+class AsyncConnection(_connection):
+    """The connection instance has a special designed attribution -> ref_count.
+        The ref_count will plus 1 once the connection instance is using by a coroutine,
+        and minus 1 when put by a coroutine.
+    """
     def __init__(self, *args, **kwargs):
-        super(async_connection, self).__init__(*args, **kwargs)
+        super(AsyncConnection, self).__init__(*args, **kwargs)
         self.__dict__['ref_count'] = 0
-
 
 class AsyncConnectionPool(SimpleConnectionPool):
     """Rewrite an async version.
@@ -41,14 +44,11 @@ class AsyncConnectionPool(SimpleConnectionPool):
             2. self._used  # conatins the using conn
             3. self._rused  # id(conn) -> key map
             4. self._keys
-
-        The connection instance has a special designed attribution -> ref_count.
-        The ref_count will plus 1 once the connection instance is using by a coroutine,
-        and minus 1 when put by a coroutine.
     """
     def _connect(self, key=None):
         """Create a new connection and assign it to 'key' if not None."""
-        conn = psycopg2.connect(*self._args, **self._kwargs, connection_factory=async_connection)
+        conn = psycopg2.connect(*self._args, **self._kwargs,
+                                connection_factory=AsyncConnection)
         if key is not None:
             self._used[key] = conn
             self._rused[id(conn)] = key
