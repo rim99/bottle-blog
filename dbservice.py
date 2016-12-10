@@ -129,6 +129,7 @@ async def process_task(pool, task):
     await ready(acurs.connection)
     result = jobs_dict[task.result_type]()
     task.send_conn.send(result)
+    acurs.close()
     pool.putconn(conn)
 
 def db_query_service(task_queue, thread_num):
