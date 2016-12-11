@@ -130,6 +130,7 @@ async def process_task(pool, task_queue, lock):
         try:
             with (await lock):
                 task = task_queue.get()
+            await ready(conn)
             acurs.execute(task.sql_cmd)
             await ready(conn)
             result = jobs_dict[task.result_type]()
