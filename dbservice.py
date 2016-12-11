@@ -122,7 +122,6 @@ async def ready(conn):
 
 async def process_task(pool, task_queue, lock):
     conn = pool.getconn()
-    await ready(conn)
     acurs = conn.cursor()
     jobs_dict = {'obj': acurs.fetchone,
                  'list': acurs.fetchall}
