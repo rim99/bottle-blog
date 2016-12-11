@@ -57,14 +57,14 @@ class AsyncConnectionPool(SimpleConnectionPool):
 
     def putconn(self, conn, key=None, close=False):
         """Put away a connection."""
+        if self.closed:
+            raise Exception("connection pool is closed")
+        if key is None:
+            key = self._rused.get(id(conn))
+        if not key:
+            raise Exception("trying to put unkeyed connection")
         conn.ref_count -= 1
         if conn.ref_count < 0:
-            if self.closed:
-                raise Exception("connection pool is closed")
-            if key is None:
-                key = self._rused.get(id(conn))
-            if not key:
-                raise Exception("trying to put unkeyed connection")
             if len(self._pool) < self.minconn and not close:
                 # Return the connection into a consistent state before putting
                 # it back into the pool
@@ -102,7 +102,6 @@ class AsyncConnectionPool(SimpleConnectionPool):
         if result.ref_count > 1 and len(self._pool) < maxconn:
             result = self._connect(key)
         # add the new conn into the Dict: _used;
-        # new conn is popped from the available list:_pool
         self._used[key] = result
         self._rused[id(result)] = key
         result.ref_count += 1
