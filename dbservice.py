@@ -136,8 +136,8 @@ async def process_task(pool, task_queue, lock):
         except Exception as msg:
             print('Database query service has raised an exception:\n  -->  {0}\n \
                   at time --> {1}\n \
-                  when execute CMD: {2}'.format(msg,
-                                                datetime.datetime.now()
+                  when execute CMD --> {2}'.format(msg,
+                                                datetime.datetime.now(),
                                                 task.sql_cmd))
         finally:
             acurs.close()
