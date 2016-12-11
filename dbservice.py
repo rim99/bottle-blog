@@ -121,32 +121,31 @@ async def ready(conn):
         else:
             raise psycopg2.OperationalError("poll() returned %s" % state)
 
-async def process_task(pool, task):
-    conn = pool.getconn()
-    await ready(conn)
-    acurs = conn.cursor()
-    jobs_dict = {'obj': acurs.fetchone,
-                 'list': acurs.fetchall}
-    acurs.execute(task.sql_cmd)
-    await ready(acurs.connection)
-    result = jobs_dict[task.result_type]()
-    task.send_conn.send(result)
-    acurs.close()
-    pool.putconn(conn)
-
-async def listen_for_task(pool, task_queue):
+async def process_task(pool, task_queue):
     while True:
         try:
             task = task_queue.get()
-            await process_task(pool, task)
+            conn = pool.getconn()
+            await ready(conn)
+            acurs = conn.cursor()
+            jobs_dict = {'obj': acurs.fetchone,
+                         'list': acurs.fetchall}
+            acurs.execute(task.sql_cmd)
+            await ready(acurs.connection)
+            result = jobs_dict[task.result_type]()
+            task.send_conn.send(result)
+            acurs.close()
+            pool.putconn(conn)
         except Exception as msg:
             print(msg)
 
 def db_query_service(task_queue, connection_num):
     pool = AsyncConnectionPool(minconn=1, maxconn=connection_num, database=DATABASE_NAME, user=USER_NAME, async=True)
     loop = asyncio.get_event_loop()
+    tasks = [asyncio.ensure_future(process_task(pool, task_queue))
+             for i in range(connection_num*20)]
     try:
-        loop.run_until_complete(listen_for_task(pool, task_queue))
+        loop.run_until_complete(asyncio.gather(*tasks))
     except Exception as msg:
         print(msg)
         loop.close()
