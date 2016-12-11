@@ -3,7 +3,7 @@
 
 __author__ = 'Rim99'
 
-import psycopg2, asyncio
+import psycopg2, asyncio, datetime
 import psycopg2.extensions as _ext
 from psycopg2._psycopg import connection as _connection
 from select import select
@@ -100,7 +100,6 @@ class AsyncConnectionPool(SimpleConnectionPool):
             if conn.ref_count < result.ref_count:
                 result = conn
         if result.ref_count > 1 and len(self._pool) < maxconn:
-            # create new connection
             result = self._connect(key)
         # add the new conn into the Dict: _used;
         # new conn is popped from the available list:_pool
@@ -122,23 +121,24 @@ async def ready(conn):
             raise psycopg2.OperationalError("poll() returned %s" % state)
 
 async def process_task(pool, task_queue, lock):
+    conn = pool.getconn()
+    await ready(conn)
+    acurs = conn.cursor()
+    jobs_dict = {'obj': acurs.fetchone,
+                 'list': acurs.fetchall}
     while True:
         try:
             with (await lock):
                 task = task_queue.get()
-            conn = pool.getconn()
-            await ready(conn)
-            acurs = conn.cursor()
-            jobs_dict = {'obj': acurs.fetchone,
-                         'list': acurs.fetchall}
             acurs.execute(task.sql_cmd)
-            await ready(acurs.connection)
+            await ready(conn)
             result = jobs_dict[task.result_type]()
             task.send_conn.send(result)
-            acurs.close()
-            pool.putconn(conn)
         except Exception as msg:
-            print(msg)
+            print('Database query service has raised an exception:\n  -->  {0}\n \
+                  at time --> {1}'.format(msg, datetime.datetime.now()))
+    acurs.close()
+    pool.putconn(conn)
 
 def db_query_service(task_queue, connection_num):
     pool = AsyncConnectionPool(minconn=1, maxconn=connection_num, database=DATABASE_NAME, user=USER_NAME, async=True)
