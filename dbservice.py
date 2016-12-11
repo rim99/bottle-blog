@@ -120,11 +120,11 @@ async def ready(conn):
             raise psycopg2.OperationalError("poll() returned %s" % state)
 
 async def process_task(pool, task_queue, lock):
-    conn = pool.getconn()
-    acurs = conn.cursor()
-    jobs_dict = {'obj': acurs.fetchone,
-                 'list': acurs.fetchall}
     while True:
+        conn = pool.getconn()
+        acurs = conn.cursor()
+        jobs_dict = {'obj': acurs.fetchone,
+                     'list': acurs.fetchall}
         try:
             with (await lock):
                 task = task_queue.get()
@@ -135,9 +135,13 @@ async def process_task(pool, task_queue, lock):
             task.send_conn.send(result)
         except Exception as msg:
             print('Database query service has raised an exception:\n  -->  {0}\n \
-                  at time --> {1}'.format(msg, datetime.datetime.now()))
-    acurs.close()
-    pool.putconn(conn)
+                  at time --> {1}\n \
+                  when execute CMD: {2}'.format(msg,
+                                                datetime.datetime.now()
+                                                task.sql_cmd))
+        finally:
+            acurs.close()
+            pool.putconn(conn)
 
 def db_query_service(task_queue, connection_num):
     pool = AsyncConnectionPool(minconn=1, maxconn=connection_num, database=DATABASE_NAME, user=USER_NAME, async=True)
