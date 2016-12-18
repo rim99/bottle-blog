@@ -121,14 +121,14 @@ async def ready(conn):
 
 async def process_task(pool, task_queue, lock):
     while True:
-        conn = pool.getconn()
-        acurs = conn.cursor()
-        jobs_dict = {'obj': acurs.fetchone,
-                     'list': acurs.fetchall}
         try:
             with (await lock):
                 task = task_queue.get()
+            conn = pool.getconn()
             await ready(conn)
+            acurs = conn.cursor()
+            jobs_dict = {'obj': acurs.fetchone,
+                         'list': acurs.fetchall}
             acurs.execute(task.sql_cmd)
             await ready(conn)
             result = jobs_dict[task.result_type]()
