@@ -14,12 +14,14 @@ The project uses [PostgreSQL](www.postgresql.org) as its database. The following
  
 item     | type
 :-:      | :-:
-title    | varchar
-category | varchar
-content  | text
-blogID   | varchar PRIMARY KEY
+title    | varchar NOT NULL
+tag1     | varchar NOT NULL
+tag2     | varchar
+tag3     | varchar
+content  | texti NOT NULL
+blogID   | varchar NOT NULL PRIMARY KEY
 postdate | timestamp
-url      | varchar
+url      | varchar NOT NULL
 
 And you can change it as your wish surely.
 
