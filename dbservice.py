@@ -127,11 +127,12 @@ async def process_task(pool, task_queue, lock):
             conn = pool.getconn()
             await ready(conn)
             acurs = conn.cursor()
-            jobs_dict = {'obj': acurs.fetchone,
-                         'list': acurs.fetchall}
             acurs.execute(task.sql_cmd)
             await ready(conn)
-            result = jobs_dict[task.result_type]()
+            if task.result_type == 'obj':
+                result = acurs.fetchone()
+            else
+                result = acurs.fetchall()
             task.send_conn.send(result)
         except Exception as msg:
             print('Database query service has raised an exception:\n  -->  {0}\n \
