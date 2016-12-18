@@ -14,11 +14,10 @@ The project uses [PostgreSQL](www.postgresql.org) as its database. The following
  
 item     | type
 :-:      | :-:
-id       | serial PRIMARY KEY
 title    | varchar
 category | varchar
 content  | text
-blogID   | varchar
+blogID   | varchar PRIMARY KEY
 postdate | timestamp
 url      | varchar
 
