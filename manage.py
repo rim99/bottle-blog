@@ -29,16 +29,18 @@ selector = sys.argv[1]
 print(selector)
 if selector == 'post':
     file = sys.argv[2]; print("file name: ", file)
-    category = sys.argv[3] if len(sys.argv) > 4 else ''; print("category: ", category)
+    if len(sys.argv) <= 4:
+        print(sys.argv)
+    category = sys.argv[3] if len(sys.argv) >= 4 else ''; print("category: ", category)
     with open(file, 'r', encoding='utf-8') as f:
         title = ''
         for line in f:
-            title = line[1:]
+            title = line[2:]
             break
-        content_html = (md(f.read()))
+        md_content = f.read()
     blog_id = PurePosixPath(file).stem  # use the filename without the extension as the blog_id
-    new_blog = blogpost.BlogPost(title, category, content_html, blog_id)
-    cmd  = blogpost.BlogPost.get_sql_cmd('save', new_blog)
+    new_blog = blogpost.BlogPost(title, category, md_content, blog_id)
+    cmd = blogpost.BlogPost.get_sql_cmd(key_word='save', attachment=new_blog)
     db_update(cmd)
 elif selector == 'del':
     blog_id = ''
@@ -61,6 +63,7 @@ elif selector == 'ls':
     task_queue.put(task)
     for r in recv_conn.recv():
         print(blogpost.BlogPost.init_from_db_result(r))
+    p.terminate()
     exit(0)
 else:
     print("Selector '%s' doesn't existed." % selector)

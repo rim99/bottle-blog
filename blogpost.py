@@ -77,8 +77,8 @@ class BlogPost(object):
         elif key_word == "delete_by_id":
             return "DELETE FROM blogposts WHERE blogID = '{}';".format(attachment)
         elif key_word == "save" and isinstance(attachment, BlogPost):
-            return "INSERT INTO blogposts (title, category, content, blogID, postdate, url) \
-             VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}');".format(attachment.title, attachment.category,
+            return "INSERT INTO blogposts (title, tag1, content, blogID, postdate, url) \
+             VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}');".format(attachment.title, attachment.tag1,
                                                                  attachment.content, attachment.blog_id,
                                                                  attachment.post_time, attachment.url)
         else:
