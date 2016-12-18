@@ -18,7 +18,7 @@ title    | varchar NOT NULL
 tag1     | varchar NOT NULL
 tag2     | varchar
 tag3     | varchar
-content  | texti NOT NULL
+content  | text NOT NULL
 blogID   | varchar NOT NULL PRIMARY KEY
 postdate | timestamp
 url      | varchar NOT NULL
