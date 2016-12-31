@@ -11,8 +11,8 @@ from psycopg2.pool import SimpleConnectionPool
 
 DATABASE_NAME = 'BlogDatabase'
 HOST = 'localhost'
-USER_NAME = 'blog'
-PASSWORD = 'blog'
+USER_NAME = 'rim99'
+PASSWORD = 'passwd'
 # USER_NAME = 'root'
 # PASSWORD = 'passwd'
 

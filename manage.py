@@ -21,6 +21,7 @@ import sys, blogpost, multiprocessing
 
 SELECTOR = {
     'post',
+    'update',
     'del',
     'ls'
 }
@@ -41,6 +42,18 @@ if selector == 'post':
     blog_id = PurePosixPath(file).stem  # use the filename without the extension as the blog_id
     new_blog = blogpost.BlogPost(title, category, md_content, blog_id)
     cmd = blogpost.BlogPost.get_sql_cmd(key_word='save', attachment=new_blog)
+    db_update(cmd)
+elif selector == 'update':
+    file = sys.argv[2]; print("file name: ", file)
+    with open(file, 'r', encoding='utf-8') as f:
+        title = ''
+        for line in f:
+            title = line[2:]
+            break
+        md_content = f.read()
+    blog_id = PurePosixPath(file).stem  # use the filename without the extension as the blog_id
+    cmd = "UPDATE blogposts SET title='{0}', content='{1}' where blogid='{2}'".format(title, md_content, blog_id)
+    print(cmd)
     db_update(cmd)
 elif selector == 'del':
     blog_id = ''
