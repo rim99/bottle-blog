@@ -54,7 +54,7 @@ class Page_Info(object):
         page_info = cls(current_page=page_num,
                    has_previous=page_num > 1,
                    has_next=page_num * POSTS_COUNT_PER_PAGE < total)
-        if not tag is None:
+        if tag is not None:
             page_info.is_tag_list = True
             page_info.tag = tag
             # get tag brief
@@ -104,9 +104,13 @@ def blogpost(blog_id):
     task_queue.put(task)
     blog_post= recv_conn.recv()
     template = TEMPLATE_ENV.get_template('post.html')
-    post = BlogPost.init_from_db_result(blog_post)
-    post.markdownize()
-    return template.render(post=post)
+    try:
+        post = BlogPost.init_from_db_result(blog_post)
+        post.markdownize()
+        return template.render(post=post)
+    except Exception as msg:
+        print(msg)
+        return error404()
 
 @app.error(404)
 def error404(error=None):
