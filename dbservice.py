@@ -131,7 +131,7 @@ async def process_task(pool, task_queue, lock):
             await ready(conn)
             if task.result_type == 'obj':
                 result = acurs.fetchone()
-            else
+            else:
                 result = acurs.fetchall()
             task.send_conn.send(result)
         except Exception as msg:
