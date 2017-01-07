@@ -13,6 +13,9 @@ __author__ = 'Rim99'
 [3] Delete blog --
         python3 manage.py del [blog id]
     if no blog id provided, the last post will be deleted.
+
+[4] Update blog --
+        python3 manage.py update [file path]
 '''
 from markdown import  markdown as md
 from pathlib import PurePosixPath
@@ -53,7 +56,6 @@ elif selector == 'update':
         md_content = f.read()
     blog_id = PurePosixPath(file).stem  # use the filename without the extension as the blog_id
     cmd = "UPDATE blogposts SET title='{0}', content='{1}' where blogid='{2}'".format(title, md_content, blog_id)
-    print(cmd)
     db_update(cmd)
 elif selector == 'del':
     blog_id = ''
