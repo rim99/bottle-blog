@@ -80,7 +80,7 @@ def index(page='1'):
         post_list = Page_Info.get_list('get_all', page, total=total)
         return template.render(post_list=post_list, page_info=page_info)
     except Exception as msg:
-        raise msg
+        print(msg)
         return error404()
 
 @app.route('/tag=<tag>')
@@ -93,7 +93,7 @@ def list_all_by_tag(tag, page='1'):
         post_list = Page_Info.get_list('query_by_tag', page, tag, total=total)
         return template.render(post_list=post_list, page_info=page_info)
     except Exception as msg:
-        raise msg
+        print(msg)
         return error404()
 
 @app.route('/blogpost/<blog_id>')
