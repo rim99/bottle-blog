@@ -41,6 +41,8 @@ class Page_Info(object):
         if tag is None:
             cmd = 'SELECT count(*) FROM blogposts;'
         else:
+            # sparse the para from sql-injection
+            tag = tag.split(';')[0]
             cmd = "SELECT count(*) FROM blogposts WHERE \
                 tag1 = '{}' OR \
                 tag2 = '{}' OR \

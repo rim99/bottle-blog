@@ -60,6 +60,10 @@ class BlogPost(object):
         '''Str, Str or Blogpost -> Str
         Return SQL command according to the key_word.
         '''
+        # sparse the para from sql-injection
+        if isinstance(attachment, str):
+            attachment = attachment.split(';')[0]
+
         if key_word == "query_by_id":
             return "SELECT * FROM blogposts WHERE blogID = '{0}';".format(attachment)
         elif key_word == "query_by_tag":
