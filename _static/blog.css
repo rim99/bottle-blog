@@ -35,6 +35,9 @@ h3 {
 	position: relative;
 	background: rgb(46,59,117);
 	color: #fff;
+	background-repeat:no-repeat;
+	background-position: -34em 3em;
+	background-image: url(/static/side_background.jpg);
 }
 
 .sidebar a {
@@ -524,7 +527,7 @@ h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:h
 }
 
 /* 
-computer 
+computer
 */
 @media (min-width: 72em) {
 	.content {
@@ -541,6 +544,7 @@ computer
 		position: fixed;
 		top: 0;
 		bottom: 0;
+		background-position: -34em 100%;
 	}
     li.prev {
         margin-left: 6%;
