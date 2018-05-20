@@ -17,7 +17,7 @@ __author__ = 'Rim99'
 [4] Update blog --
         python3 manage.py update [file path]
 '''
-from markdown import  markdown as md
+# from markdown import  markdown as md
 from pathlib import PurePosixPath
 from dbservice import db_update, db_query_service, Task
 import sys, blogpost, multiprocessing

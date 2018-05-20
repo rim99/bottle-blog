@@ -24,6 +24,18 @@ class BlogPost(object):
         self.post_time = datetime.datetime.today() if post_time is None else post_time
         self.url = '{0}/blogpost/{1}'.format(DOMAIN_NAME, blog_id) if url is None else url
 
+    def toDict(self):
+        d = dict()
+        d["title"] = str(self.title).strip()
+        d["blog_id"] = str(self.blog_id).strip()
+        d["post_time"] = self.post_time.isoformat(' ').strip()
+        tags = list()
+        tags.append(str(self.tag1).strip())
+        tags.append(str(self.tag2).strip())
+        tags.append(str(self.tag3).strip())
+        d["tags"] = tags
+        return d
+
     def __str__(self):
         if self.tag2 is None:
             tag2 = ''
