@@ -1,0 +1,6 @@
+{
+    "protocol": "http",
+    "db_location": "127.0.0.1:5984",
+    "account": "root-user",
+    "password": "root-passwd"
+}
