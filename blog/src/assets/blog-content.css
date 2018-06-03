@@ -253,141 +253,22 @@
 /* 
 computer
 */
-@media (min-width: 72em) {
-	.content {
-		padding: 2em 3em 0;
-		margin-left: 25%;
-	}
-
-	.header {
-		margin: 8% 2em 0;
-		text-align: right;
-	}
-
-	.sidebar {
-		position: fixed;
-		top: 0;
-		bottom: 0;
-	}
-    li.prev {
-        margin-left: 6%;
-    }
-    li.next {
-        margin-right: 0%;
-    }
+@media (max-width: 1000px) {
+	#blogpost {
+		width:80%;
+	}  
 }
 
-/*
-tablet 
-*/
-@media (min-width: 48em) and (max-width: 71.99em) {
-	.sidebar {
-		position: fixed;
-		top: 0;
-		bottom: 0;
-	}
+@media (max-width: 840px) {
+	#blogpost {
+		width:70%;
+	} 
 
-	input.pure-input-3-3 {
-		margin-left: 5%;
-		width: 90%;
-	}
-    
-
-	h1.brand-title {
-		font-size: 170%;
-		text-align: right;
-		margin-right: 5%;
-	}
-
-	h2.brand-tagline {
-		text-align: left;
-		margin-left: 5%;
-		font-size: 130%;
-		padding-bottom: 0;
-	}
-
-    li.prev {
-        margin-left: -2.5%;
-    }
-    
-    li.next {
-        margin-right: 7%;
-    }
-    
-	div.licence {
-		margin: 15% 10% 15% 10%;
-	}
-
-	.post {
-		padding-bottom: 2em;
-		padding-left: 3%;
-		padding-right: 3%;
-	}
-
-	.content {
-		margin-left: 25%;
-	}
-
-	h1.post-title {
-		font-size: 2em;
-		margin-top: 0;
-	}
 }
 
-/* Nexus7 protrait */
-@media (min-width: 48em) and (max-width: 71.99em) and (max-height:40em) {
-	.nav-list {
-		margin-top: 62%;
-	}
-}
-/* iPad landscape */
-@media (min-width: 48em) and (max-width: 71.99em) and (min-height:40.01em) and (max-height:52em) {
-	.nav-list {
-		margin-top: 120%;
-	}
-}
-/* iPad protrait */
-@media (min-width: 48em) and (max-width: 71.99em) and (min-height:52.01em) {
-	.nav-list {
-		margin-top: 170%;
-	}
-}
+@media (max-width: 640px) {
+	#blogpost {
+		width:30%;
+	} 
 
-
-/* 
-Cellphone 
-*/
-@media (max-width: 47.99em) {
-	input.pure-input-3-3 {
-		margin-left: 2em;
-	}
-
-	h2.brand-tagline {
-		text-align: right;
-		margin-right: 2em;
-	}
-
-
-    li.prev {
-        margin-left: -4%;
-    }
-    
-    li.next {
-        margin-right: 4%;
-    }
-    
-	div.licence {
-		margin: 15% 10% 5% 10%;
-	}
-
-	.post {
-		padding-bottom: 2em;
-		padding-left: 3%;
-		padding-right: 3%;
-	}
-
-	h1.post-title {
-		font-size: 2em;
-		margin-top: 0;
-	}
 }

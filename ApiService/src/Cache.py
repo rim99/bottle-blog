@@ -13,7 +13,7 @@ def cacheAsync(cache_name, cache_key, time_alived, func, *kw, **kwargs):
         # default cache live time is 5 seconds
         time_alived = 5
 
-    concrete_cache = None
+    # concrete_cache = None
     if cache_name in _cacheAll.keys():
         concrete_cache = _cacheAll.get(cache_name)
     else:
@@ -25,7 +25,8 @@ def cacheAsync(cache_name, cache_key, time_alived, func, *kw, **kwargs):
     if ans is not None:
         return ans
     ans = yield func(*kw, **kwargs)
-    concrete_cache.store(cache_key, ans, time_alived)
+    if ans is not None:
+        concrete_cache.store(cache_key, ans, time_alived)
     return ans
 
 

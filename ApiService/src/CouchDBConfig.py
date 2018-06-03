@@ -1,10 +1,7 @@
 #! /bin/env/python3
 
 import base64
-import http.client
 import json
-
-
 
 class CouchDBConfig:
     def __init__(self, config_file):
